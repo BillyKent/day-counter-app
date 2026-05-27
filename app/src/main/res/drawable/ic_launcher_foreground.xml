@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Calendar/counter icon shape centered in the 72dp safe zone (18-90) -->
+    <!-- Outer rounded rectangle (calendar body) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M33,36 L75,36 C77.2,36 79,37.8 79,40 L79,72 C79,74.2 77.2,76 75,76 L33,76 C30.8,76 29,74.2 29,72 L29,40 C29,37.8 30.8,36 33,36 Z"/>
+    <!-- Calendar top bar -->
+    <path
+        android:fillColor="#1B5E50"
+        android:pathData="M29,40 L29,46 L79,46 L79,40 C79,37.8 77.2,36 75,36 L33,36 C30.8,36 29,37.8 29,40 Z"/>
+    <!-- Calendar hangers -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M40,32 L40,40 M68,32 L68,40"/>
+    <!-- Number "7" representing streak days -->
+    <path
+        android:fillColor="#2E7D6F"
+        android:pathData="M43,52 L62,52 L62,55 L53,70 L49,70 L57,55 L43,55 Z"/>
+</vector>
