@@ -1,0 +1,1 @@
+-keep class com.daycounter.data.database.entity.** { *; }

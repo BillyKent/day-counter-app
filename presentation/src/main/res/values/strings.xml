@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notification channel -->
+    <string name="notification_channel_milestones">Milestone notifications</string>
+    <string name="notification_channel_milestones_description">Notifies when your streak reaches a milestone (7, 30, 60, 90, 180, 365 days).</string>
+
+    <!-- Notification content -->
+    <string name="notification_milestone_title">%1$s — %2$d-day milestone</string>
+    <string name="notification_milestone_text">You\'ve reached %1$d days! Keep going.</string>
+
+    <!-- Widget -->
+    <string name="widget_label">Day Counter</string>
+    <string name="widget_days_label">days</string>
+    <string name="widget_counter_removed">Counter removed</string>
+    <string name="widget_select_counter">Select counter</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">Track your streaks</string>
+    <string name="onboarding_body_1">Pick a goal — "no alcohol", "daily journaling" — and watch your streak grow.</string>
+    <string name="onboarding_title_2">Celebrate milestones</string>
+    <string name="onboarding_body_2">Hit 7, 30, 60, 90, 180, or 365 days? We\'ll let you know.</string>
+    <string name="onboarding_title_3">Place a widget</string>
+    <string name="onboarding_body_3">Put your counters on the home screen so they\'re always in sight.</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get started</string>
+
+    <!-- Home -->
+    <string name="home_title">My counters</string>
+    <string name="home_empty_title">No counters yet</string>
+    <string name="home_empty_body">Add your first counter to start tracking a goal.</string>
+    <string name="home_add_counter">Add counter</string>
+    <string name="home_settings">Settings</string>
+    <string name="home_streak_days">%1$d days</string>
+    <string name="home_streak_day">%1$d day</string>
+    <string name="home_card_content_description">%1$s, streak %2$d days</string>
+
+    <!-- Counter create / edit -->
+    <string name="counter_goal_name_label">Goal name</string>
+    <string name="counter_start_date_label">Start date</string>
+    <string name="counter_save">Save</string>
+    <string name="counter_cancel">Cancel</string>
+    <string name="counter_reset">Reset</string>
+    <string name="counter_delete">Delete</string>
+    <string name="counter_create_title">New counter</string>
+    <string name="counter_edit_title">Edit counter</string>
+    <string name="counter_detail_title">Counter</string>
+    <string name="counter_error_name_blank">Goal name is required.</string>
+    <string name="counter_error_name_long">Goal name must be 100 characters or fewer.</string>
+    <string name="counter_error_future">Start date cannot be in the future.</string>
+    <string name="counter_error_storage">Couldn\'t save. Please try again.</string>
+    <string name="counter_reset_title">Reset counter?</string>
+    <string name="counter_reset_message">Your streak will go back to day 0. Milestones will be re-eligible.</string>
+    <string name="counter_delete_title">Delete counter?</string>
+    <string name="counter_delete_message">This permanently removes the counter and its history.</string>
+    <string name="counter_confirm">Confirm</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_notifications">Milestone notifications</string>
+    <string name="settings_notifications_description">Receive a notification when a counter hits a milestone.</string>
+    <string name="back">Back</string>
+</resources>

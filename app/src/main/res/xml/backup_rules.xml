@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include domain="database" path="day_counter.db"/>
+    <include domain="sharedpref" path="."/>
+    <include domain="file" path="datastore"/>
+    <exclude domain="database" path="androidx.work.workdb"/>
+</full-backup-content>
