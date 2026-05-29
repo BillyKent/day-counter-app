@@ -1,37 +1,40 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 2.0.0 → 2.1.0 (MINOR)
-Reason: Added Principle VI (Security & Privacy) as a new standalone principle.
-        Expanded Technical Standards with Baseline Profiles, WorkManager, localization,
-        and crash-reporting expectations. No existing principle was removed or weakened.
+Version change: 2.1.0 → 2.2.0 (MINOR)
+Reason: Amended Principle IV (Modern Android Development Stack) — the mandatory Navigation
+        technology is updated to Jetpack Navigation 3 (NavDisplay/entryProvider), with
+        Navigation Compose retained as acceptable for unmigrated code. Added a documented
+        Navigation 3 add-on exception permitting a release-candidate pin for
+        lifecycle-viewmodel-navigation3 until a stable release ships. No principle was
+        removed or weakened; the prohibited alternatives (Fragment backstack, manual intent
+        routing) are unchanged. MINOR per versioning policy ("new mandatory tool added" /
+        materially expanded guidance).
 
 Modified principles (old title → new title):
-  None — all five existing principles retain their names and content.
+  None — all six principles retain their names. Principle IV content amended (Navigation row
+  + add-on exception paragraph) only.
 
 Added sections:
-  - Principle VI: Security & Privacy (new)
-  - Technical Standards: Baseline Profiles requirement
-  - Technical Standards: Localization requirement
-  - Technical Standards: WorkManager added to mandatory-stack table (Principle IV)
-  - Development Workflow: Pre-merge checklist — Security gate added
+  - Principle IV: "Navigation 3 add-on exception" paragraph (RC-pin allowance, documented).
 
 Removed sections:
   None
 
 Templates requiring updates:
-  - .specify/templates/plan-template.md ⚠ pending
-      Constitution Check should include Principle VI (Security) gate.
-      Technical Context fields should reference WorkManager and Baseline Profiles
-      when applicable to the feature.
+  - .specify/templates/plan-template.md ✅ No structural change required.
+      The Constitution Check table is principle-driven; the Navigation row change is captured
+      per-feature in plan.md (002 already records the Nav3 migration + RC exception in
+      Complexity Tracking).
   - .specify/templates/spec-template.md ✅ No structural change required.
-      Security acceptance scenarios should be included in User Stories where applicable;
-      Principle VI guidance is sufficient for authors.
   - .specify/templates/tasks-template.md ✅ No structural change required.
-      Security hardening is already listed in the Polish phase. Authors should
-      reference Principle VI explicitly when security tasks are generated.
+
+Prior amendment (2.0.0 → 2.1.0): Added Principle VI (Security & Privacy); expanded Technical
+Standards with Baseline Profiles, WorkManager, localization, crash-reporting.
 
 Follow-up TODOs:
+  - TODO(NAV3_STABLE): Move lifecycle-viewmodel-navigation3 from 2.10.0-rc01 to the stable
+    release once published; remove the RC note from feature plans' Complexity Tracking.
   - TODO(MIN_SDK): Confirm minSdk = 26 (Android 8.0) is acceptable for target user base.
     Current choice covers ~97% of active Android devices (June 2025 distribution data).
   - TODO(COVERAGE_THRESHOLD): 80% line coverage on :domain module is the initial gate.
@@ -130,7 +133,7 @@ amendment.
 | State management | `ViewModel` + `StateFlow` / `SharedFlow` | `LiveData`, `RxJava` |
 | Dependency injection | Hilt (latest stable) | Manual DI, Koin, Dagger without Hilt |
 | Async / reactive | Kotlin Coroutines + `Flow` | RxJava, callbacks |
-| Navigation | Navigation Compose | Fragment backstack, manual intent routing |
+| Navigation | Jetpack Navigation 3 (`NavDisplay` / `entryProvider`); Navigation Compose remains acceptable for unmigrated code | Fragment backstack, manual intent routing |
 | Local persistence | Room (if needed) | SQLiteOpenHelper, raw cursors |
 | Preferences / secrets | DataStore (Preferences) for non-sensitive; `EncryptedSharedPreferences` for secrets | Plain `SharedPreferences` |
 | Background work | WorkManager | Bare `Service`, `AlarmManager`, deprecated `JobScheduler` direct use |
@@ -138,6 +141,12 @@ amendment.
 
 All Jetpack library versions MUST be sourced from the official Jetpack Compose BOM where
 applicable. Non-BOM dependencies MUST be pinned to an exact version in `libs.versions.toml`.
+
+**Navigation 3 add-on exception**: the Navigation 3 add-on libraries (notably
+`androidx.lifecycle:lifecycle-viewmodel-navigation3`) MAY be pinned to a release-candidate
+version while no stable release exists, as a temporary, documented exception to the
+"latest stable" expectation. Such a pin MUST be recorded in the consuming feature's
+`plan.md` Complexity Tracking and MUST be moved to the stable release as soon as one ships.
 
 **Rationale**: The MAD stack is the current Android-endorsed approach. It provides lifecycle
 safety, testability, and Kotlin-first APIs. Mixing paradigms (e.g., LiveData + Flow) creates
@@ -284,4 +293,4 @@ a migration plan for code that depended on the prior rule.
 - **MINOR**: New principle or section added; coverage threshold raised; new mandatory tool added.
 - **PATCH**: Wording clarified; typo fixed; table reformatted; non-semantic refinement.
 
-**Version**: 2.1.0 | **Ratified**: 2026-05-27 | **Last Amended**: 2026-05-27
+**Version**: 2.2.0 | **Ratified**: 2026-05-27 | **Last Amended**: 2026-05-29
