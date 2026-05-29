@@ -10,14 +10,14 @@ class CheckMilestonesUseCaseTest {
 
     @Test
     fun `returns matching milestone for each canonical day`() {
-        listOf(7, 30, 60, 90, 180, 365).forEach { m ->
+        listOf(1, 7, 30, 100, 365, 1000).forEach { m ->
             assertEquals(m, sut(m))
         }
     }
 
     @Test
     fun `returns null for non-milestone day counts`() {
-        listOf(0, 1, 6, 8, 29, 31, 100, 364, 366).forEach { d ->
+        listOf(0, 2, 6, 8, 29, 31, 99, 101, 364, 366, 999, 1001).forEach { d ->
             assertNull("streak=$d should not match", sut(d))
         }
     }

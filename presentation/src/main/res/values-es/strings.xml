@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Canal de notificaciones -->
+    <string name="notification_channel_milestones">Notificaciones de hitos</string>
+    <string name="notification_channel_milestones_description">Avisa cuando tu racha alcanza un hito (1, 7, 30, 100, 365, 1000 días).</string>
+
+    <!-- Contenido de la notificación -->
+    <string name="notification_milestone_title">%1$s — hito de %2$d días</string>
+    <string name="notification_milestone_text">¡Llegaste a %1$d días! Sigue así.</string>
+
+    <!-- Widget -->
+    <string name="widget_label">Contador de Días</string>
+    <string name="widget_days_label">días</string>
+    <string name="widget_counter_removed">Contador eliminado</string>
+    <string name="widget_select_counter">Elegir contador</string>
+
+    <!-- Introducción -->
+    <string name="onboarding_title_1">Sigue tus rachas</string>
+    <string name="onboarding_body_1">Elige una meta — "sin alcohol", "escribir a diario" — y mira crecer tu racha.</string>
+    <string name="onboarding_title_2">Celebra tus hitos</string>
+    <string name="onboarding_body_2">¿Llegaste a 1, 7, 30, 100, 365 o 1000 días? Te lo haremos saber.</string>
+    <string name="onboarding_title_3">Coloca un widget</string>
+    <string name="onboarding_body_3">Pon tus contadores en la pantalla de inicio para tenerlos siempre a la vista.</string>
+    <string name="onboarding_skip">Saltar</string>
+    <string name="onboarding_next">Siguiente</string>
+    <string name="onboarding_get_started">Empezar</string>
+
+    <!-- Pestañas de navegación inferior -->
+    <string name="tab_counters">Contadores</string>
+    <string name="tab_stats">Estadísticas</string>
+    <string name="tab_settings">Ajustes</string>
+
+    <!-- Inicio / pestaña Contadores -->
+    <string name="home_title">Contadores</string>
+    <string name="home_empty_title">Aún no hay contadores</string>
+    <string name="home_empty_body">Agrega tu primer contador para empezar a seguir una meta.</string>
+    <string name="home_empty_cta">Crear un contador</string>
+    <string name="home_add_counter">Agregar contador</string>
+    <string name="home_settings">Ajustes</string>
+    <string name="home_streak_days">%1$d días</string>
+    <string name="home_streak_day">%1$d día</string>
+    <string name="home_card_content_description">%1$s, racha de %2$d días</string>
+    <string name="home_summary_total">Total</string>
+    <string name="home_summary_best_streak">Mejor racha</string>
+    <string name="home_badge_goal_reached">Hito alcanzado</string>
+    <string name="home_card_start_date">Desde el %1$s</string>
+    <string name="home_ring_content_description">Progreso: %1$d de %2$d días</string>
+
+    <!-- Detalle del contador -->
+    <string name="counter_detail_title">Contador</string>
+    <string name="counter_detail_next_milestone">%1$d días para tu próximo hito</string>
+    <string name="counter_detail_all_milestones">Has alcanzado todos los hitos</string>
+    <string name="counter_detail_achieved_title">Hitos alcanzados</string>
+    <string name="counter_detail_action_edit">Editar</string>
+    <string name="counter_detail_action_reset">Reiniciar</string>
+    <string name="counter_detail_action_delete">Eliminar</string>
+    <string name="counter_detail_action_history">Abrir historial</string>
+    <string name="counter_detail_action_revive">Revivir celebración</string>
+    <string name="counter_detail_milestone_chip">%1$d</string>
+
+    <!-- Crear / editar contador -->
+    <string name="counter_goal_name_label">Nombre</string>
+    <string name="counter_category_label">Categoría</string>
+    <string name="counter_start_date_label">Fecha de inicio</string>
+    <string name="counter_goal_target_label">Hito objetivo</string>
+    <string name="counter_goal_target_chip">%1$d días</string>
+    <string name="counter_edit_date_readonly_hint">Para empezar de cero, usa Reiniciar.</string>
+    <string name="counter_save">Guardar</string>
+    <string name="counter_cancel">Cancelar</string>
+    <string name="counter_reset">Reiniciar</string>
+    <string name="counter_delete">Eliminar</string>
+    <string name="counter_create_title">Nuevo contador</string>
+    <string name="counter_edit_title">Editar contador</string>
+    <string name="counter_error_name_blank">El nombre es obligatorio.</string>
+    <string name="counter_error_name_long">El nombre debe tener 100 caracteres o menos.</string>
+    <string name="counter_error_category_long">La categoría debe tener 50 caracteres o menos.</string>
+    <string name="counter_error_future">La fecha de inicio no puede estar en el futuro.</string>
+    <string name="counter_error_storage">No se pudo guardar. Inténtalo de nuevo.</string>
+    <string name="counter_delete_title">¿Eliminar contador?</string>
+    <string name="counter_delete_message">Esto elimina permanentemente el contador y su historial.</string>
+    <string name="counter_confirm">Confirmar</string>
+
+    <!-- Confirmación de reinicio -->
+    <string name="reset_confirm_title">¿Reiniciar contador?</string>
+    <string name="reset_confirm_message">Tu racha actual se archivará en tu historial y el contador empezará de nuevo desde hoy.</string>
+    <string name="reset_confirm_confirm">Reiniciar</string>
+    <string name="reset_confirm_cancel">Cancelar</string>
+
+    <!-- Celebración de hito -->
+    <string name="celebration_keep_going">Seguir así</string>
+    <string name="celebration_close">Cerrar</string>
+    <string name="celebration_message_1">Día 1. El más difícil ya empezó.</string>
+    <string name="celebration_message_7">Una semana completa. Esto ya es un hábito que empieza.</string>
+    <string name="celebration_message_30">30 días. Pasaste el mes.</string>
+    <string name="celebration_message_100">Cien días. Algo cambió en ti.</string>
+    <string name="celebration_message_365">Un año entero. Esto ya no es una meta, es quién eres.</string>
+    <string name="celebration_message_1000">Mil días. No hay palabras suficientes.</string>
+
+    <!-- Pestaña Estadísticas -->
+    <string name="stats_title">Estadísticas</string>
+    <string name="stats_total_accumulated">Total acumulado</string>
+    <string name="stats_best_streak">Mejor racha</string>
+    <string name="stats_active_counters">Contadores activos</string>
+    <string name="stats_days">%1$d días</string>
+    <string name="stats_empty_title">Aún no hay estadísticas</string>
+    <string name="stats_empty_body">Crea un contador para empezar a ver tu progreso aquí.</string>
+
+    <!-- Historial / calendario -->
+    <string name="history_title">Historial</string>
+    <string name="history_current_streak">Racha actual: %1$d días</string>
+    <string name="history_calendar_title">Este mes</string>
+    <string name="history_past_streaks_title">Rachas anteriores</string>
+    <string name="history_past_streak_row">%1$d días · %2$s · %3$s</string>
+    <string name="history_reason_reset">Reiniciado</string>
+    <string name="history_load_more">Ver más</string>
+    <string name="history_sparkline_content_description">Crecimiento de la racha, %1$d días</string>
+    <string name="history_calendar_cell_in_streak">Día %1$d, en racha</string>
+    <string name="history_calendar_cell_today">Día %1$d, hoy</string>
+    <string name="history_calendar_cell_pre_streak">Día %1$d, antes de la racha</string>
+    <string name="history_calendar_cell_future">Día %1$d, próximo</string>
+
+    <!-- Ajustes -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_notifications">Notificaciones de hitos</string>
+    <string name="settings_notifications_description">Recibe una notificación cuando un contador alcanza un hito.</string>
+    <string name="back">Atrás</string>
+</resources>

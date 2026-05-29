@@ -1,6 +1,8 @@
 [versions]
 # Build tools
-agp = "8.7.3"
+# AGP 8.9.x is the minimal line that can target compileSdk 36 (Navigation 3 requirement).
+# AGP 9 is intentionally out of scope (separate workstream). Requires Gradle 8.11.1 (wrapper pinned).
+agp = "8.9.1"
 kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
 
@@ -13,10 +15,15 @@ androidxSplashscreen = "1.0.1"
 
 # Compose
 composeBom = "2024.12.01"
-composeNavigation = "2.8.5"
+
+# Navigation 3 (replaces Navigation Compose 2.x)
+nav3Core = "1.0.0"
+# Stable as of resolution (navigation3 1.0.0 constrains this to 2.10.0); the plan's RC exception is no longer needed.
+lifecycleViewmodelNav3 = "2.10.0"
 
 # Hilt
 hilt = "2.52"
+# 1.2.0 exposes hiltViewModel(creationCallback = …) used for assisted-injected, NavKey-scoped ViewModels.
 hiltNavigationCompose = "1.2.0"
 hiltWork = "1.2.0"
 
@@ -42,6 +49,8 @@ mockk = "1.13.13"
 androidxJunit = "1.2.1"
 espresso = "3.6.1"
 turbine = "1.2.0"
+robolectric = "4.14.1"
+androidxTestCore = "1.6.1"
 
 # Quality
 kover = "0.8.3"
@@ -69,7 +78,11 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
+
+# Navigation 3
+androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -109,6 +122,8 @@ mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "moc
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

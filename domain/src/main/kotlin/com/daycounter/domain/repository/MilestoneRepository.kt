@@ -16,4 +16,10 @@ interface MilestoneRepository {
 
     /** Deletes all milestone records for the given counter (used during reset). */
     suspend fun deleteAllForCounter(counterId: Long)
+
+    /** Returns all milestone records for the counter (drives the achieved list and dedup). */
+    suspend fun getForCounter(counterId: Long): List<MilestoneRecord>
+
+    /** Sets `celebrationShown = true` for every milestone row of the counter (FR-021). */
+    suspend fun markAllShownForCounter(counterId: Long)
 }

@@ -14,12 +14,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,35 +39,19 @@ import com.daycounter.presentation.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onAddCounter: () -> Unit,
-    onEditCounter: (Long) -> Unit,
-    onOpenSettings: () -> Unit,
+    onCardTap: (Long) -> Unit,
+    onAddTap: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.home_title)) },
-                actions = {
-                    IconButton(
-                        onClick = onOpenSettings,
-                        modifier = Modifier
-                            .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
-                            .testTag("home_settings"),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = stringResource(R.string.home_settings),
-                        )
-                    }
-                },
-            )
+            TopAppBar(title = { Text(stringResource(R.string.home_title)) })
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = onAddCounter,
+                onClick = onAddTap,
                 icon = { Icon(Icons.Filled.Add, contentDescription = null) },
                 text = { Text(stringResource(R.string.home_add_counter)) },
                 modifier = Modifier
@@ -92,7 +74,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 items(state.counters, key = { it.id }) { row ->
-                    CounterCard(row = row, onClick = { onEditCounter(row.id) })
+                    CounterCard(row = row, onClick = { onCardTap(row.id) })
                 }
             }
         }

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.daycounter.domain.model.MilestoneRecord
 import java.time.Instant
 
 @Entity(
@@ -31,4 +32,24 @@ data class MilestoneRecordEntity(
     val milestoneDays: Int,
     @ColumnInfo(name = "notified_at")
     val notifiedAt: Instant,
+    @ColumnInfo(name = "celebration_shown", defaultValue = "0")
+    val celebrationShown: Boolean = false,
+)
+
+/** Maps a persisted [MilestoneRecordEntity] to its [MilestoneRecord] domain model. */
+fun MilestoneRecordEntity.toDomain(): MilestoneRecord = MilestoneRecord(
+    id = id,
+    counterId = counterId,
+    milestoneDays = milestoneDays,
+    notifiedAt = notifiedAt,
+    celebrationShown = celebrationShown,
+)
+
+/** Maps a [MilestoneRecord] domain model to its [MilestoneRecordEntity] for persistence. */
+fun MilestoneRecord.toEntity(): MilestoneRecordEntity = MilestoneRecordEntity(
+    id = id,
+    counterId = counterId,
+    milestoneDays = milestoneDays,
+    notifiedAt = notifiedAt,
+    celebrationShown = celebrationShown,
 )

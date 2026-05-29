@@ -1,6 +1,8 @@
 package com.daycounter.domain.repository
 
 import com.daycounter.domain.model.Counter
+import java.time.Instant
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,4 +23,17 @@ interface CounterRepository {
     suspend fun update(counter: Counter)
 
     suspend fun delete(counter: Counter)
+
+    /**
+     * Atomically archives the current streak (if [streakDaysAtReset] > 0), clears the counter's
+     * milestone rows, and sets its start date to [today] (FR-017). All-or-nothing.
+     *
+     * @param now Wall-clock moment used as the archived record's `createdAt`.
+     */
+    suspend fun archiveAndReset(
+        counterId: Long,
+        streakDaysAtReset: Int,
+        today: LocalDate,
+        now: Instant,
+    )
 }

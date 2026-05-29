@@ -15,4 +15,12 @@ interface MilestoneRecordDao {
 
     @Query("DELETE FROM milestone_records WHERE counter_id = :counterId")
     suspend fun deleteAllForCounter(counterId: Long)
+
+    /** All milestone rows for the counter (drives the achieved list and dedup). */
+    @Query("SELECT * FROM milestone_records WHERE counter_id = :counterId ORDER BY milestone_days ASC")
+    suspend fun selectForCounter(counterId: Long): List<MilestoneRecordEntity>
+
+    /** Marks every milestone row of the counter as celebration-shown (FR-021). */
+    @Query("UPDATE milestone_records SET celebration_shown = 1 WHERE counter_id = :counterId")
+    suspend fun markAllShownForCounter(counterId: Long)
 }

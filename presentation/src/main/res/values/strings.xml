@@ -2,7 +2,7 @@
 <resources>
     <!-- Notification channel -->
     <string name="notification_channel_milestones">Milestone notifications</string>
-    <string name="notification_channel_milestones_description">Notifies when your streak reaches a milestone (7, 30, 60, 90, 180, 365 days).</string>
+    <string name="notification_channel_milestones_description">Notifies when your streak reaches a milestone (1, 7, 30, 100, 365, 1000 days).</string>
 
     <!-- Notification content -->
     <string name="notification_milestone_title">%1$s — %2$d-day milestone</string>
@@ -18,42 +18,106 @@
     <string name="onboarding_title_1">Track your streaks</string>
     <string name="onboarding_body_1">Pick a goal — "no alcohol", "daily journaling" — and watch your streak grow.</string>
     <string name="onboarding_title_2">Celebrate milestones</string>
-    <string name="onboarding_body_2">Hit 7, 30, 60, 90, 180, or 365 days? We\'ll let you know.</string>
+    <string name="onboarding_body_2">Hit 1, 7, 30, 100, 365, or 1000 days? We\'ll let you know.</string>
     <string name="onboarding_title_3">Place a widget</string>
     <string name="onboarding_body_3">Put your counters on the home screen so they\'re always in sight.</string>
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_get_started">Get started</string>
 
-    <!-- Home -->
-    <string name="home_title">My counters</string>
+    <!-- Bottom navigation tabs -->
+    <string name="tab_counters">Counters</string>
+    <string name="tab_stats">Statistics</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Home / Counters tab -->
+    <string name="home_title">Counters</string>
     <string name="home_empty_title">No counters yet</string>
     <string name="home_empty_body">Add your first counter to start tracking a goal.</string>
+    <string name="home_empty_cta">Create a counter</string>
     <string name="home_add_counter">Add counter</string>
     <string name="home_settings">Settings</string>
     <string name="home_streak_days">%1$d days</string>
     <string name="home_streak_day">%1$d day</string>
     <string name="home_card_content_description">%1$s, streak %2$d days</string>
+    <string name="home_summary_total">Total</string>
+    <string name="home_summary_best_streak">Best streak</string>
+    <string name="home_badge_goal_reached">Goal reached</string>
+    <string name="home_card_start_date">Started %1$s</string>
+    <string name="home_ring_content_description">Progress: %1$d of %2$d days</string>
+
+    <!-- Counter detail -->
+    <string name="counter_detail_title">Counter</string>
+    <string name="counter_detail_next_milestone">%1$d days to your next milestone</string>
+    <string name="counter_detail_all_milestones">You\'ve reached every milestone</string>
+    <string name="counter_detail_achieved_title">Milestones reached</string>
+    <string name="counter_detail_action_edit">Edit</string>
+    <string name="counter_detail_action_reset">Reset</string>
+    <string name="counter_detail_action_delete">Delete</string>
+    <string name="counter_detail_action_history">Open history</string>
+    <string name="counter_detail_action_revive">Replay celebration</string>
+    <string name="counter_detail_milestone_chip">%1$d</string>
 
     <!-- Counter create / edit -->
     <string name="counter_goal_name_label">Goal name</string>
+    <string name="counter_category_label">Category</string>
     <string name="counter_start_date_label">Start date</string>
+    <string name="counter_goal_target_label">Goal milestone</string>
+    <string name="counter_goal_target_chip">%1$d days</string>
+    <string name="counter_edit_date_readonly_hint">To start over, use Reset.</string>
     <string name="counter_save">Save</string>
     <string name="counter_cancel">Cancel</string>
     <string name="counter_reset">Reset</string>
     <string name="counter_delete">Delete</string>
     <string name="counter_create_title">New counter</string>
     <string name="counter_edit_title">Edit counter</string>
-    <string name="counter_detail_title">Counter</string>
     <string name="counter_error_name_blank">Goal name is required.</string>
     <string name="counter_error_name_long">Goal name must be 100 characters or fewer.</string>
+    <string name="counter_error_category_long">Category must be 50 characters or fewer.</string>
     <string name="counter_error_future">Start date cannot be in the future.</string>
     <string name="counter_error_storage">Couldn\'t save. Please try again.</string>
-    <string name="counter_reset_title">Reset counter?</string>
-    <string name="counter_reset_message">Your streak will go back to day 0. Milestones will be re-eligible.</string>
     <string name="counter_delete_title">Delete counter?</string>
     <string name="counter_delete_message">This permanently removes the counter and its history.</string>
     <string name="counter_confirm">Confirm</string>
+
+    <!-- Reset confirmation -->
+    <string name="reset_confirm_title">Reset counter?</string>
+    <string name="reset_confirm_message">Your current streak will be archived to your history and the counter will start again from today.</string>
+    <string name="reset_confirm_confirm">Reset</string>
+    <string name="reset_confirm_cancel">Cancel</string>
+
+    <!-- Milestone celebration -->
+    <string name="celebration_keep_going">Keep it up</string>
+    <string name="celebration_close">Close</string>
+    <string name="celebration_message_1">Day 1. The hardest part has begun.</string>
+    <string name="celebration_message_7">A full week. This is becoming a habit.</string>
+    <string name="celebration_message_30">30 days. You made it through the month.</string>
+    <string name="celebration_message_100">One hundred days. Something changed in you.</string>
+    <string name="celebration_message_365">A whole year. This isn\'t a goal anymore, it\'s who you are.</string>
+    <string name="celebration_message_1000">A thousand days. There aren\'t enough words.</string>
+
+    <!-- Statistics tab -->
+    <string name="stats_title">Statistics</string>
+    <string name="stats_total_accumulated">Total accumulated</string>
+    <string name="stats_best_streak">Best streak</string>
+    <string name="stats_active_counters">Active counters</string>
+    <string name="stats_days">%1$d days</string>
+    <string name="stats_empty_title">No statistics yet</string>
+    <string name="stats_empty_body">Create a counter to start seeing your progress here.</string>
+
+    <!-- History / calendar -->
+    <string name="history_title">History</string>
+    <string name="history_current_streak">Current streak: %1$d days</string>
+    <string name="history_calendar_title">This month</string>
+    <string name="history_past_streaks_title">Past streaks</string>
+    <string name="history_past_streak_row">%1$d days · %2$s · %3$s</string>
+    <string name="history_reason_reset">Reset</string>
+    <string name="history_load_more">See more</string>
+    <string name="history_sparkline_content_description">Streak growth, %1$d days</string>
+    <string name="history_calendar_cell_in_streak">Day %1$d, in streak</string>
+    <string name="history_calendar_cell_today">Day %1$d, today</string>
+    <string name="history_calendar_cell_pre_streak">Day %1$d, before streak</string>
+    <string name="history_calendar_cell_future">Day %1$d, upcoming</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

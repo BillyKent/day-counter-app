@@ -1,9 +1,12 @@
 package com.daycounter.data.repository
 
 import com.daycounter.data.database.dao.CounterDao
-import com.daycounter.data.database.entity.CounterEntity
+import com.daycounter.data.database.entity.toDomain
+import com.daycounter.data.database.entity.toEntity
 import com.daycounter.domain.model.Counter
 import com.daycounter.domain.repository.CounterRepository
+import java.time.Instant
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -23,8 +26,10 @@ class CounterRepositoryImpl @Inject constructor(
 
     override suspend fun delete(counter: Counter) = dao.delete(counter.toEntity())
 
-    private fun CounterEntity.toDomain(): Counter = Counter(id, goalName, startDate, createdAt)
-
-    private fun Counter.toEntity(): CounterEntity =
-        CounterEntity(id = id, goalName = goalName, startDate = startDate, createdAt = createdAt)
+    override suspend fun archiveAndReset(
+        counterId: Long,
+        streakDaysAtReset: Int,
+        today: LocalDate,
+        now: Instant,
+    ) = dao.archiveAndReset(counterId, streakDaysAtReset, today, now)
 }
