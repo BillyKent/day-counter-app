@@ -1,6 +1,39 @@
 <!--
 Sync Impact Report
 ==================
+Version change: 2.2.0 → 2.3.0 (MINOR)
+Reason: Amended Principle I (User Experience First) — Theming. Dynamic color (Material You) changes
+        from an unconditional requirement to conditional: it MUST be supported UNLESS the app adopts
+        a defined brand design system, in which case that design system's palette is authoritative and
+        dynamic color MAY be disabled. Dark mode remains mandatory; "no hardcoded colors — all colors
+        sourced from the Material 3 theme" remains mandatory (now explicitly including documented
+        brand / extended color tokens). Enables feature 003's Claude Design brand palette.
+        MINOR per versioning policy: guidance materially modified; no principle removed or renamed; the
+        substantive guarantees (themed colors, dark mode) are preserved — and brand consistency is
+        strengthened. MAJOR was considered (a MUST is relaxed) but rejected: the principle's intent is
+        intact and the change is a scoped allowance, not a weakening of the UX-First principle.
+
+Modified principles:
+  - Principle I — User Experience First: Theming bullet amended (brand-design-system allowance for
+    dynamic color); no rename.
+
+Added sections: None
+Removed sections: None
+
+Templates requiring updates:
+  - .specify/templates/plan-template.md ✅ No structural change (Constitution Check is principle-driven).
+  - .specify/templates/spec-template.md ✅ No change required.
+  - .specify/templates/tasks-template.md ✅ No change required.
+  - specs/003-design-migration-features/plan.md ✅ Updated — dynamic-color deviation now sanctioned.
+  - specs/003-design-migration-features/tasks.md ✅ Updated — T106 reflects amendment completed.
+
+Follow-up TODOs: None new (prior 2.2.0 TODOs unchanged).
+
+------------------------------------------------------------------------------------------------------
+Prior amendment (retained for history):
+
+Sync Impact Report
+==================
 Version change: 2.1.0 → 2.2.0 (MINOR)
 Reason: Amended Principle IV (Modern Android Development Stack) — the mandatory Navigation
         technology is updated to Jetpack Navigation 3 (NavDisplay/entryProvider), with
@@ -55,8 +88,12 @@ the 48 dp minimum touch-target size. The application MUST support:
 
 - **Accessibility**: TalkBack compatibility with meaningful content descriptions on every
   interactive element; no information conveyed by color alone; focus order MUST be logical.
-- **Theming**: Dark mode and dynamic color (Material You) MUST be supported from the first
-  release. No hardcoded colors; all colors sourced from the Material 3 theme.
+- **Theming**: Dark mode MUST be supported from the first release. Dynamic color (Material You)
+  MUST be supported UNLESS the app adopts a **defined brand design system**, in which case that
+  design system's palette is authoritative and dynamic color MAY be disabled. The chosen brand
+  design system MUST itself provide a complete light and dark palette. In every case, no hardcoded
+  colors are permitted: all colors MUST be sourced from the Material 3 theme — its `ColorScheme`
+  plus any documented brand / extended color tokens layered on it.
 - **Responsiveness**: Layouts MUST adapt to compact, medium, and expanded window size classes
   (phones, foldables, tablets) using adaptive layout APIs.
 - **Edge-to-edge**: The app MUST render edge-to-edge and handle window insets correctly on
@@ -293,4 +330,4 @@ a migration plan for code that depended on the prior rule.
 - **MINOR**: New principle or section added; coverage threshold raised; new mandatory tool added.
 - **PATCH**: Wording clarified; typo fixed; table reformatted; non-semantic refinement.
 
-**Version**: 2.2.0 | **Ratified**: 2026-05-27 | **Last Amended**: 2026-05-29
+**Version**: 2.3.0 | **Ratified**: 2026-05-27 | **Last Amended**: 2026-05-29
