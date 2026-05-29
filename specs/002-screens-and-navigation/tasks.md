@@ -119,15 +119,15 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 2 ⚠️ (write first, must fail)
 
-- [ ] T037 [P] [US2] Compose UI test covering US2 scenarios 1–6 (Empty state + CTA at 0; summary Total/Mejor racha; card ring/streak/name/date; badge when streak ≥ target; "+" → Create sheet; card tap → Detail) in `presentation/src/test/kotlin/com/daycounter/presentation/home/HomeScreenTest.kt`
-- [ ] T038 [P] [US2] Unit test for `GetStatsSummaryUseCase` (total = Σ streak, best = max streak, active = count) in `domain/src/test/kotlin/com/daycounter/domain/usecase/GetStatsSummaryUseCaseTest.kt`
+- [X] T037 [P] [US2] Compose UI test covering US2 scenarios 1–6 (Empty state + CTA at 0; summary Total/Mejor racha; card ring/streak/name/date; badge when streak ≥ target; "+" → Create sheet; card tap → Detail) in `presentation/src/test/kotlin/com/daycounter/presentation/home/HomeScreenTest.kt`
+- [X] T038 [P] [US2] Unit test for `GetStatsSummaryUseCase` (total = Σ streak, best = max streak, active = count) in `domain/src/test/kotlin/com/daycounter/domain/usecase/GetStatsSummaryUseCaseTest.kt`
 
 ### Implementation for User Story 2
 
-- [ ] T039 [P] [US2] Create `GetStatsSummaryUseCase` (total accumulated, best streak, active counters; reused by US5) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetStatsSummaryUseCase.kt`
-- [ ] T040 [US2] Update `HomeViewModel`: expose summary state + `CounterCardUi` (ringFillRatio, goalReached), `createSheetVisible`, and lifecycle-resume streak recompute, in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeViewModel.kt`
-- [ ] T041 [US2] Update `HomeScreen`: summary cards, per-card `ProgressRing` + badge + name + start date, "+" FAB → `CreateCounter`, Empty-state CTA, card tap → `Detail(id)` (remove any Home→Edit nav, FR-009), in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeScreen.kt`
-- [ ] T042 [US2] Add Home/summary/badge string resources to `values/strings.xml` and `values-es/strings.xml`
+- [X] T039 [P] [US2] Create `GetStatsSummaryUseCase` (total accumulated, best streak, active counters; reused by US5) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetStatsSummaryUseCase.kt`
+- [X] T040 [US2] Update `HomeViewModel`: expose summary state + `CounterCardUi` (ringFillRatio, goalReached), `createSheetVisible`, and lifecycle-resume streak recompute, in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeViewModel.kt`
+- [X] T041 [US2] Update `HomeScreen`: summary cards, per-card `ProgressRing` + badge + name + start date, "+" FAB → `CreateCounter`, Empty-state CTA, card tap → `Detail(id)` (remove any Home→Edit nav, FR-009), in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeScreen.kt`
+- [X] T042 [US2] Add Home/summary/badge string resources to `values/strings.xml` and `values-es/strings.xml`
 
 **Checkpoint**: Home renders the enriched list independently (counters seedable via DB for the test).
 
@@ -141,18 +141,18 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 3 ⚠️ (write first, must fail)
 
-- [ ] T043 [P] [US3] Compose UI test covering US3 scenarios 1–9 (hero ring denominator, next-milestone hint, ≥1000 replacement, achieved chips non-interactive, Editar/Reiniciar/Eliminar/Historial/Revivir) in `presentation/src/test/kotlin/com/daycounter/presentation/counter/CounterDetailScreenTest.kt`
-- [ ] T044 [P] [US3] Unit tests for `GetNextMilestoneUseCase`, `GetAchievedMilestonesUseCase`, `GetMostRecentMilestoneUseCase` in `domain/src/test/kotlin/com/daycounter/domain/usecase/MilestoneQueriesTest.kt`
+- [X] T043 [P] [US3] Compose UI test covering US3 scenarios 1–9 (hero ring denominator, next-milestone hint, ≥1000 replacement, achieved chips non-interactive, Editar/Reiniciar/Eliminar/Historial/Revivir) in `presentation/src/test/kotlin/com/daycounter/presentation/counter/CounterDetailScreenTest.kt`
+- [X] T044 [P] [US3] Unit tests for `GetNextMilestoneUseCase`, `GetAchievedMilestonesUseCase`, `GetMostRecentMilestoneUseCase` in `domain/src/test/kotlin/com/daycounter/domain/usecase/MilestoneQueriesTest.kt`
 
 ### Implementation for User Story 3
 
-- [ ] T045 [P] [US3] Create `GetNextMilestoneUseCase` (smallest milestone strictly > streak; null when streak ≥ 1000) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetNextMilestoneUseCase.kt`
-- [ ] T046 [P] [US3] Create `GetAchievedMilestonesUseCase` (milestones ≤ current streak) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetAchievedMilestonesUseCase.kt`
-- [ ] T047 [P] [US3] Create `GetMostRecentMilestoneUseCase` (highest milestone ≤ current streak) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetMostRecentMilestoneUseCase.kt`
-- [ ] T048 [US3] Create `CounterDetailViewModel` (state: streak/ring/hint/achieved/canRevive/sheet flags; `UiEvent` for delete + history nav; resume recompute; delete returns to Contadores) with Hilt `@AssistedInject(counterId)` + `@AssistedFactory` in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
-- [ ] T049 [US3] Rewrite `CounterDetailScreen`: hero `ProgressRing` (goal denominator), next-milestone hint, achieved chips (non-interactive), actions → Editar (`EditCounter`), Reiniciar (`ResetConfirm`), Eliminar (confirm → delete → Contadores), Abrir historial (`History`), Revivir (`Celebration`), in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailScreen.kt`
-- [ ] T050 [US3] Register the `Detail` entry in `AppNavDisplay` with `hiltViewModel(creationCallback = { it.create(key) })` in `presentation/src/main/kotlin/com/daycounter/presentation/navigation/AppNavDisplay.kt`
-- [ ] T051 [US3] Add Detail string resources (next-milestone hint, "Has alcanzado todos los hitos", action labels) to `values/` and `values-es/`
+- [X] T045 [P] [US3] Create `GetNextMilestoneUseCase` (smallest milestone strictly > streak; null when streak ≥ 1000) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetNextMilestoneUseCase.kt`
+- [X] T046 [P] [US3] Create `GetAchievedMilestonesUseCase` (milestones ≤ current streak) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetAchievedMilestonesUseCase.kt`
+- [X] T047 [P] [US3] Create `GetMostRecentMilestoneUseCase` (highest milestone ≤ current streak) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetMostRecentMilestoneUseCase.kt`
+- [X] T048 [US3] Create `CounterDetailViewModel` (state: streak/ring/hint/achieved/canRevive/sheet flags; `UiEvent` for delete + history nav; resume recompute; delete returns to Contadores) with Hilt `@AssistedInject(counterId)` + `@AssistedFactory` in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
+- [X] T049 [US3] Rewrite `CounterDetailScreen`: hero `ProgressRing` (goal denominator), next-milestone hint, achieved chips (non-interactive), actions → Editar (`EditCounter`), Reiniciar (`ResetConfirm`), Eliminar (confirm → delete → Contadores), Abrir historial (`History`), Revivir (`Celebration`), in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailScreen.kt`
+- [X] T050 [US3] Register the `Detail` entry in `AppNavDisplay` with `hiltViewModel(creationCallback = { it.create(key) })` in `presentation/src/main/kotlin/com/daycounter/presentation/navigation/AppNavDisplay.kt`
+- [X] T051 [US3] Add Detail string resources (next-milestone hint, "Has alcanzado todos los hitos", action labels) to `values/` and `values-es/`
 
 **Checkpoint**: Detail is fully navigable; Eliminar works end-to-end. Reiniciar/Revivir open the sheets/overlay delivered in US7/US4.
 
@@ -166,16 +166,16 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 4 ⚠️ (write first, must fail)
 
-- [ ] T052 [P] [US4] Compose UI test covering US4 scenarios 1–5 (auto-launch once, copy + name, close returns to Detail, no second auto-launch, Revivir opens most-recent) in `presentation/src/test/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationTest.kt`
-- [ ] T053 [P] [US4] Unit test for `MarkCelebrationsShownUseCase` and for `CheckMilestonesUseCase` with the new set + `celebrationShown=false` on insert in `domain/src/test/kotlin/com/daycounter/domain/usecase/CelebrationUseCasesTest.kt`
+- [X] T052 [P] [US4] Compose UI test covering US4 scenarios 1–5 (auto-launch once, copy + name, close returns to Detail, no second auto-launch, Revivir opens most-recent) in `presentation/src/test/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationTest.kt`
+- [X] T053 [P] [US4] Unit test for `MarkCelebrationsShownUseCase` and for `CheckMilestonesUseCase` with the new set + `celebrationShown=false` on insert in `domain/src/test/kotlin/com/daycounter/domain/usecase/CelebrationUseCasesTest.kt`
 
 ### Implementation for User Story 4
 
-- [ ] T054 [P] [US4] Create `MarkCelebrationsShownUseCase` (set `celebration_shown = true` for all of a counter's rows) in `domain/src/main/kotlin/com/daycounter/domain/usecase/MarkCelebrationsShownUseCase.kt`
-- [ ] T055 [US4] Update `CheckMilestonesUseCase` to use `MILESTONE_DAYS = {1,7,30,100,365,1000}` and insert new records with `celebrationShown = false` in `domain/src/main/kotlin/com/daycounter/domain/usecase/CheckMilestonesUseCase.kt`
-- [ ] T056 [US4] Create `MilestoneCelebrationViewModel` (resolve milestone + copy from string resources; mark shown) with `@AssistedInject(Celebration key)` in `presentation/src/main/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationViewModel.kt`
-- [ ] T057 [US4] Create `MilestoneCelebrationScreen` full-screen overlay (animated `ProgressRing`, milestone number, copy, counter name, "Seguir así" / close X → `removeLast()`) and register its entry in `AppNavDisplay`, in `presentation/src/main/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationScreen.kt`
-- [ ] T058 [US4] Wire Detail auto-launch in `CounterDetailViewModel` (on resume, if the most-recent milestone has an unseen record → emit `AutoLaunchCelebration(N)`; on launch, call `MarkCelebrationsShownUseCase`) and the Revivir action, in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
+- [X] T054 [P] [US4] Create `MarkCelebrationsShownUseCase` (set `celebration_shown = true` for all of a counter's rows) in `domain/src/main/kotlin/com/daycounter/domain/usecase/MarkCelebrationsShownUseCase.kt`
+- [X] T055 [US4] Update `CheckMilestonesUseCase` to use `MILESTONE_DAYS = {1,7,30,100,365,1000}` and insert new records with `celebrationShown = false` in `domain/src/main/kotlin/com/daycounter/domain/usecase/CheckMilestonesUseCase.kt`
+- [X] T056 [US4] Create `MilestoneCelebrationViewModel` (resolve milestone + copy from string resources; mark shown) with `@AssistedInject(Celebration key)` in `presentation/src/main/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationViewModel.kt`
+- [X] T057 [US4] Create `MilestoneCelebrationScreen` full-screen overlay (animated `ProgressRing`, milestone number, copy, counter name, "Seguir así" / close X → `removeLast()`) and register its entry in `AppNavDisplay`, in `presentation/src/main/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationScreen.kt`
+- [X] T058 [US4] Wire Detail auto-launch in `CounterDetailViewModel` (on resume, if the most-recent milestone has an unseen record → emit `AutoLaunchCelebration(N)`; on launch, call `MarkCelebrationsShownUseCase`) and the Revivir action, in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
 
 **Checkpoint**: Celebration auto-launches once and is re-openable; US3's Revivir/auto-launch now complete end-to-end.
 

@@ -12,6 +12,9 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.daycounter.presentation.celebration.MilestoneCelebrationScreen
+import com.daycounter.presentation.counter.CounterDetailActions
+import com.daycounter.presentation.counter.CounterDetailScreen
 import com.daycounter.presentation.home.HomeScreen
 import com.daycounter.presentation.onboarding.OnboardingScreen
 import com.daycounter.presentation.settings.SettingsScreen
@@ -57,9 +60,27 @@ fun AppNavDisplay(
             }
 
             // ---- Full-screen children ----
-            entry<Detail> { Placeholder("counter_detail_screen") } // US3 (T049/T050)
+            entry<Detail> { key ->
+                CounterDetailScreen(
+                    counterId = key.counterId,
+                    actions = CounterDetailActions(
+                        onBack = { backStack.removeLast() },
+                        onEdit = { backStack.add(EditCounter(it)) },
+                        onReset = { backStack.add(ResetConfirm(it)) },
+                        onHistory = { backStack.add(History(it)) },
+                        onCelebration = { id, milestone -> backStack.add(Celebration(id, milestone)) },
+                        onExitToContadores = { backStack.popToBase() },
+                    ),
+                )
+            }
             entry<History> { Placeholder("history_screen") } // US8 (T081/T082)
-            entry<Celebration> { Placeholder("celebration_screen") } // US4 (T057)
+            entry<Celebration> { key ->
+                MilestoneCelebrationScreen(
+                    counterId = key.counterId,
+                    milestone = key.milestone,
+                    onClose = { backStack.removeLast() },
+                )
+            }
 
             // ---- Bottom sheets ----
             entry<CreateCounter>(metadata = BottomSheetSceneStrategy.bottomSheet()) {

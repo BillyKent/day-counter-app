@@ -2,115 +2,228 @@ package com.daycounter.presentation.counter
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import com.daycounter.domain.model.Counter
-import com.daycounter.domain.usecase.CalculateStreakUseCase
-import com.daycounter.domain.usecase.GetCounterByIdUseCase
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.daycounter.presentation.R
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import com.daycounter.presentation.components.ProgressRing
 
-@HiltViewModel
-class CounterDetailViewModel @Inject constructor(
-    private val getCounter: GetCounterByIdUseCase,
-    private val calculateStreak: CalculateStreakUseCase,
-) : ViewModel() {
+/** Navigation callbacks for the Detail screen (each maps to a TopLevelBackStack operation). */
+data class CounterDetailActions(
+    val onBack: () -> Unit,
+    val onEdit: (Long) -> Unit,
+    val onReset: (Long) -> Unit,
+    val onHistory: (Long) -> Unit,
+    val onCelebration: (counterId: Long, milestone: Int) -> Unit,
+    val onExitToContadores: () -> Unit,
+)
 
-    suspend fun load(counterId: Long): Pair<Counter, Int>? {
-        val counter = getCounter(counterId) ?: return null
-        return counter to calculateStreak(counter.startDate)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CounterDetailScreen(
     counterId: Long,
-    onEdit: (Long) -> Unit,
-    onCounterMissing: () -> Unit,
-    onBack: () -> Unit,
-    viewModel: CounterDetailViewModel = hiltViewModel(),
+    actions: CounterDetailActions,
+    viewModel: CounterDetailViewModel = hiltViewModel<CounterDetailViewModel, CounterDetailViewModel.Factory>(
+        creationCallback = { factory -> factory.create(counterId) },
+    ),
 ) {
-    var loaded by remember { mutableStateOf<Pair<Counter, Int>?>(null) }
-    var missing by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(counterId) {
-        val result = viewModel.load(counterId)
-        if (result == null) {
-            missing = true
-        } else {
-            loaded = result
+    LifecycleResumeEffect(Unit) {
+        viewModel.onResume()
+        onPauseOrDispose { }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                CounterDetailViewModel.UiEvent.CounterDeleted -> actions.onExitToContadores()
+                is CounterDetailViewModel.UiEvent.AutoLaunchCelebration ->
+                    actions.onCelebration(counterId, event.milestone)
+            }
         }
     }
-    LaunchedEffect(missing) {
-        if (missing) onCounterMissing()
+    LaunchedEffect(state.missing) {
+        if (state.missing) actions.onExitToContadores()
     }
 
+    CounterDetailContent(
+        state = state,
+        counterId = counterId,
+        actions = actions,
+        onRequestDelete = viewModel::requestDelete,
+        onConfirmDelete = viewModel::confirmDelete,
+        onDismissDelete = viewModel::dismissDelete,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+internal fun CounterDetailContent(
+    state: CounterDetailUiState,
+    counterId: Long,
+    actions: CounterDetailActions,
+    onRequestDelete: () -> Unit,
+    onConfirmDelete: () -> Unit,
+    onDismissDelete: () -> Unit,
+) {
     Scaffold(
+        modifier = Modifier.testTag("counter_detail_screen"),
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.counter_detail_title)) },
+                title = { Text(state.name) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp),
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back),
-                        )
-                    }
-                },
-                actions = {
-                    val current = loaded
-                    if (current != null) {
-                        IconButton(
-                            onClick = { onEdit(current.first.id) },
-                            modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = stringResource(R.string.counter_edit_title),
-                            )
-                        }
+                    IconButton(onClick = actions.onBack, modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp)) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
             )
         },
     ) { padding ->
-        val current = loaded ?: return@Scaffold
+        if (state.isLoading || state.missing) return@Scaffold
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(current.first.goalName, style = MaterialTheme.typography.headlineMedium)
+            ProgressRing(
+                days = state.streakDays,
+                target = state.goalMilestoneTarget,
+                contentDescription = stringResource(
+                    R.string.home_ring_content_description,
+                    state.streakDays,
+                    state.goalMilestoneTarget,
+                ),
+                diameter = 160.dp,
+                strokeWidth = 14.dp,
+            ) {
+                Text(
+                    text = state.streakDays.toString(),
+                    style = MaterialTheme.typography.displayMedium,
+                    modifier = Modifier.testTag("detail_hero_streak"),
+                )
+            }
+
             Text(
-                stringResource(R.string.home_streak_days, current.second),
-                style = MaterialTheme.typography.displayLarge,
+                text = if (state.nextMilestone != null) {
+                    stringResource(R.string.counter_detail_next_milestone, state.nextMilestone - state.streakDays)
+                } else {
+                    stringResource(R.string.counter_detail_all_milestones)
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.testTag("detail_next_milestone"),
+            )
+
+            if (state.achievedMilestones.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.counter_detail_achieved_title),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    state.achievedMilestones.forEach { milestone ->
+                        AchievedChip(milestone)
+                    }
+                }
+            }
+
+            DetailActions(state = state, counterId = counterId, actions = actions, onRequestDelete = onRequestDelete)
+        }
+
+        if (state.deleteConfirmVisible) {
+            AlertDialog(
+                onDismissRequest = onDismissDelete,
+                title = { Text(stringResource(R.string.counter_delete_title)) },
+                text = { Text(stringResource(R.string.counter_delete_message)) },
+                confirmButton = {
+                    TextButton(onClick = onConfirmDelete, modifier = Modifier.testTag("detail_delete_confirm")) {
+                        Text(stringResource(R.string.counter_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = onDismissDelete) { Text(stringResource(R.string.counter_cancel)) }
+                },
             )
         }
+    }
+}
+
+@Composable
+private fun AchievedChip(milestone: Int) {
+    // Informational and intentionally non-interactive (FR-022): no click action.
+    Surface(
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        modifier = Modifier.testTag("achieved_chip_$milestone"),
+    ) {
+        Text(
+            text = stringResource(R.string.counter_detail_milestone_chip, milestone),
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun DetailActions(
+    state: CounterDetailUiState,
+    counterId: Long,
+    actions: CounterDetailActions,
+    onRequestDelete: () -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        ActionButton("detail_action_edit", stringResource(R.string.counter_detail_action_edit)) { actions.onEdit(counterId) }
+        ActionButton("detail_action_reset", stringResource(R.string.counter_detail_action_reset)) { actions.onReset(counterId) }
+        ActionButton("detail_action_history", stringResource(R.string.counter_detail_action_history)) { actions.onHistory(counterId) }
+        if (state.canRevive && state.mostRecentMilestone != null) {
+            ActionButton("detail_action_revive", stringResource(R.string.counter_detail_action_revive)) {
+                actions.onCelebration(counterId, state.mostRecentMilestone)
+            }
+        }
+        ActionButton("detail_action_delete", stringResource(R.string.counter_detail_action_delete), onRequestDelete)
+    }
+}
+
+@Composable
+private fun ActionButton(tag: String, label: String, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 48.dp).testTag(tag),
+    ) {
+        Text(label)
     }
 }

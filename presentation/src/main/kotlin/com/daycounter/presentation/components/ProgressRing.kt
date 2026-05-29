@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -42,12 +42,16 @@ fun ProgressRing(
     val fraction = (days.toFloat() / safeTarget).coerceIn(0f, 1f)
 
     Box(
-        modifier = modifier
-            .size(diameter)
-            .clearAndSetSemantics { this.contentDescription = contentDescription },
+        modifier = modifier.size(diameter),
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(modifier = Modifier.size(diameter)) {
+        // Description lives on the (otherwise invisible to a11y) Canvas; the optional center
+        // content keeps its own semantics so it stays readable and testable.
+        Canvas(
+            modifier = Modifier
+                .size(diameter)
+                .semantics { this.contentDescription = contentDescription },
+        ) {
             val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
             val inset = strokeWidth.toPx() / 2f
             val arcSize = androidx.compose.ui.geometry.Size(

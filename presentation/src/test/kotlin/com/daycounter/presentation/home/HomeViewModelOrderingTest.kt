@@ -5,6 +5,7 @@ import com.daycounter.domain.model.Counter
 import com.daycounter.domain.repository.CounterRepository
 import com.daycounter.domain.usecase.CalculateStreakUseCase
 import com.daycounter.domain.usecase.GetAllCountersUseCase
+import com.daycounter.domain.usecase.GetStatsSummaryUseCase
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +51,7 @@ class HomeViewModelOrderingTest {
         val clock = Clock.fixed(today.atStartOfDay(ZoneOffset.UTC).toInstant(), ZoneOffset.UTC)
         val calc = CalculateStreakUseCase(clock, ZoneOffset.UTC)
 
-        val sut = HomeViewModel(getAll, calc)
+        val sut = HomeViewModel(getAll, calc, GetStatsSummaryUseCase(calc))
 
         sut.uiState.test {
             // Skip the initial loading state, then read the first emission with data.
