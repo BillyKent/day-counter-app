@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" -->
+<html lang="es"><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css"></head>
+<body style="padding:24px; background:#FBF6EE">
+  <div class="row" style="gap:14px">
+    <!-- Streak card -->
+    <div style="flex:1.4; background:#fff; border-radius:24px; padding:20px; box-shadow:0 4px 12px rgba(15,95,110,0.08); display:flex; align-items:center; gap:18px">
+      <div style="position:relative; width:88px; height:88px; flex-shrink:0">
+        <svg viewBox="0 0 100 100" width="88" height="88">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#F4EDDF" stroke-width="8"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#0F5F6E" stroke-width="8" stroke-linecap="round"
+            stroke-dasharray="263.9" stroke-dashoffset="22" transform="rotate(-90 50 50)"/>
+        </svg>
+        <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:30px; font-weight:600; color:#0F5F6E; font-variant-numeric:tabular-nums; letter-spacing:-0.03em">30</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:2px; min-width:0">
+        <div style="font-family:var(--font-display); font-size:20px; font-weight:600; color:#1B2A33">Sin fumar</div>
+        <div style="font-family:var(--font-body); font-size:13px; color:#5F7079">Iniciado el 5 de marzo</div>
+        <div style="font-family:var(--font-body); font-size:12px; color:#0F5F6E; font-weight:600; margin-top:6px; letter-spacing:0.04em; text-transform:uppercase">Meta: 90 días</div>
+      </div>
+    </div>
+    <!-- Compact stat card -->
+    <div style="flex:0.7; background:#fff; border-radius:24px; padding:18px; box-shadow:0 4px 12px rgba(15,95,110,0.08); display:flex; flex-direction:column; gap:6px; justify-content:space-between">
+      <div style="font-family:var(--font-body); font-size:11px; font-weight:600; color:#5F7079; letter-spacing:0.08em; text-transform:uppercase">Racha actual</div>
+      <div style="font-family:var(--font-display); font-size:44px; font-weight:600; color:#0F5F6E; line-height:1; letter-spacing:-0.03em; font-variant-numeric:tabular-nums">30<span style="font-size:18px; color:#5F7079; font-weight:500; margin-left:4px">días</span></div>
+      <div style="font-family:var(--font-body); font-size:12px; color:#6FA88B; font-weight:600">↑ tu mejor racha</div>
+    </div>
+  </div>
+</body></html>

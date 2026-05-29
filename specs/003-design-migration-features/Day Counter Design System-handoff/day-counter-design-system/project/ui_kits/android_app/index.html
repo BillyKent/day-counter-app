@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day Counter — UI Kit</title>
+  <link rel="stylesheet" href="../../colors_and_type.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100vh; }
+    body {
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 10%, rgba(216, 234, 236, 0.55), transparent 60%),
+        radial-gradient(ellipse 500px 380px at 90% 85%, rgba(251, 231, 221, 0.45), transparent 60%),
+        var(--bg);
+      min-height: 100vh;
+      font-family: var(--font-body);
+      color: var(--ink);
+      padding: 48px 24px;
+    }
+    .stage {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 460px;
+      gap: 16px;
+    }
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header .sub {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+    .header img { height: 32px; }
+    #root { display: flex; justify-content: center; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="header">
+      <img src="../../assets/logo.svg" alt="Day Counter"/>
+      <div style="text-align: right;">
+        <div class="sub">UI Kit · prototipo navegable</div>
+        <a href="widgets.html" style="font-family: var(--font-body); font-size: 13px; color: var(--brand); font-weight: 600; text-decoration: none;">Ver widgets &amp; notificaciones →</a>
+      </div>
+    </div>
+    <div id="state-picker" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding: 4px 0;"></div>
+    <div id="root"></div>
+  </div>
+
+  <!-- React + Babel (pinned) -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- Components -->
+  <script type="text/babel" src="components.jsx"></script>
+  <!-- Screens -->
+  <script type="text/babel" src="screen-onboarding.jsx"></script>
+  <script type="text/babel" src="screen-empty.jsx"></script>
+  <script type="text/babel" src="screen-home.jsx"></script>
+  <script type="text/babel" src="screen-detail.jsx"></script>
+  <script type="text/babel" src="screen-history.jsx"></script>
+  <script type="text/babel" src="screen-create.jsx"></script>
+  <script type="text/babel" src="screen-edit.jsx"></script>
+  <script type="text/babel" src="screen-milestone.jsx"></script>
+  <script type="text/babel" src="screen-stats.jsx"></script>
+  <script type="text/babel" src="screen-settings.jsx"></script>
+  <!-- App -->
+  <script type="text/babel" src="app.jsx"></script>
+  <script type="text/babel" data-presets="react">
+    // State picker — lets the user reset the phone into any starting state
+    const STATES = [
+      { id: 'main',        label: 'Inicio · contadores' },
+      { id: 'onboarding',  label: 'Onboarding' },
+      { id: 'empty',       label: 'Sin contadores' },
+      { id: 'stats',       label: 'Estadísticas', tab: 'stats' },
+      { id: 'settings',    label: 'Ajustes', tab: 'settings' },
+    ];
+    let current = 'main';
+    const pickerEl = document.getElementById('state-picker');
+    const rootEl = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootEl);
+
+    function renderPicker() {
+      pickerEl.innerHTML = '';
+      STATES.forEach(s => {
+        const btn = document.createElement('button');
+        btn.textContent = s.label;
+        const isActive = s.id === current;
+        btn.style.cssText = `
+          font-family: var(--font-body); font-size: 13px; font-weight: 600;
+          padding: 8px 16px; border-radius: 999px; border: none; cursor: pointer;
+          background: ${isActive ? 'var(--brand)' : 'rgba(255,255,255,0.75)'};
+          color: ${isActive ? '#fff' : 'var(--ink-2)'};
+          backdrop-filter: blur(8px);
+          box-shadow: ${isActive ? '0 4px 12px rgba(15,95,110,0.18)' : '0 1px 2px rgba(15,95,110,0.06)'};
+          transition: transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
+        `;
+        btn.onmousedown = () => btn.style.transform = 'scale(0.96)';
+        btn.onmouseup = btn.onmouseleave = () => btn.style.transform = 'scale(1)';
+        btn.onclick = () => {
+          current = s.id;
+          renderPicker();
+          const initialRoute = (s.id === 'onboarding' || s.id === 'empty') ? s.id : 'main';
+          const initialTab = s.tab || 'home';
+          // Re-mount the app with a key so all state resets
+          root.render(<App key={s.id + Date.now()} initialRoute={initialRoute} initialTab={initialTab}/>);
+        };
+        pickerEl.appendChild(btn);
+      });
+    }
+    renderPicker();
+    root.render(<App/>);
+  </script>
+</body>
+</html>

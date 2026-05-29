@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Components" -->
+<html lang="es"><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css"></head>
+<style>
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px;
+         font-family: var(--font-body); font-weight:600; font-size:15px;
+         padding: 12px 22px; border-radius: 999px; border: none; cursor: pointer;
+         transition: transform 180ms var(--ease-out-soft), background 180ms var(--ease-out-soft);
+         font-variant-numeric: tabular-nums; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background:#0F5F6E; color:#fff; }
+  .btn-secondary { background:#FFFFFF; color:#0F5F6E; box-shadow: inset 0 0 0 1.5px #0F5F6E; }
+  .btn-soft { background:#D8EAEC; color:#0F5F6E; }
+  .btn-ghost { background: transparent; color:#0F5F6E; }
+  .btn-danger { background:#C97062; color:#fff; }
+  .btn-disabled { background:#0F5F6E; color:#fff; opacity:0.4; cursor:not-allowed; }
+  .btn-icon { width:48px; height:48px; padding:0; border-radius:999px; background:#0F5F6E; color:#fff; }
+</style>
+<body style="padding:24px">
+  <div class="col" style="gap:14px">
+    <div class="row wrap" style="gap:10px; align-items:center">
+      <button class="btn btn-primary">Crear contador</button>
+      <button class="btn btn-secondary">Editar</button>
+      <button class="btn btn-soft">Pausar</button>
+      <button class="btn btn-ghost">Cancelar</button>
+    </div>
+    <div class="row wrap" style="gap:10px; align-items:center">
+      <button class="btn btn-danger">Reiniciar</button>
+      <button class="btn btn-disabled">Guardar</button>
+      <button class="btn btn-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="btn btn-primary" style="padding:14px 26px; font-size:16px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Nueva meta
+      </button>
+    </div>
+  </div>
+</body></html>

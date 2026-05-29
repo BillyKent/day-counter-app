@@ -1,0 +1,237 @@
+/* =========================================================================
+   Day Counter — Design Tokens
+   Tokens: colores, tipografía, radios, espaciado, sombras, easing.
+   ========================================================================= */
+
+/* ---------- Fuentes (Google Fonts) ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---------- Colores base ---------- */
+
+  /* Marca — teal profundo, transmite confianza calmada */
+  --brand:           #0F5F6E;
+  --brand-hover:     #0B4E5B;
+  --brand-press:     #08404B;
+  --brand-soft:      #D8EAEC;   /* fondo de tinte / chip activo */
+  --brand-softer:    #ECF4F5;
+  --brand-mid:       #2A8597;   /* gradientes hacia teal claro */
+
+  /* Superficies — crema cálida, no blanco puro */
+  --bg:              #FBF6EE;   /* fondo de app */
+  --bg-elevated:     #FFFFFF;   /* cards */
+  --bg-sunken:       #F4EDDF;   /* secciones agrupadas */
+  --bg-overlay:      rgba(15, 95, 110, 0.25);   /* backdrop de modales */
+
+  /* Tinta */
+  --ink:             #1B2A33;
+  --ink-2:           #3D4E58;
+  --ink-muted:       #5F7079;
+  --ink-subtle:      #8B9AA3;
+  --ink-on-brand:    #FFFFFF;
+
+  /* Bordes y separadores */
+  --border:          #E8E0D2;
+  --border-soft:     #EFE6D6;
+  --border-strong:   #D6CCB8;
+
+  /* Semánticos — todos cálidos, sin neón */
+  --success:         #6FA88B;   /* salvia — racha creciendo */
+  --success-soft:    #E1EDE3;
+  --milestone:       #D9876A;   /* terracota — hito alcanzado */
+  --milestone-soft:  #FBE7DD;
+  --warning:         #D9A05B;   /* arena tostada — atención */
+  --warning-soft:    #FAEED7;
+  --danger:          #C97062;   /* terracota apagado — reset / eliminar */
+  --danger-soft:     #F6DDD8;
+
+  /* ---------- Tipografía ---------- */
+  --font-display:    'Outfit', system-ui, -apple-system, sans-serif;
+  --font-body:       'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:       ui-monospace, SFMono-Regular, 'JetBrains Mono', monospace;
+
+  /* Tamaños */
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  32px;
+  --text-3xl:  44px;
+  --text-hero: 96px;    /* el número de la racha */
+
+  /* Pesos */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semi:     600;
+  --weight-bold:     700;
+
+  /* Line-heights */
+  --lh-tight:  1.1;
+  --lh-snug:   1.25;
+  --lh-base:   1.5;
+  --lh-loose:  1.7;
+
+  /* Tracking */
+  --tracking-tight:  -0.02em;
+  --tracking-base:   0;
+  --tracking-wide:   0.04em;
+  --tracking-eyebrow: 0.12em;
+
+  /* ---------- Radio ---------- */
+  --radius-xs:   8px;
+  --radius-sm:   12px;
+  --radius-md:   16px;   /* inputs, chips */
+  --radius-lg:   20px;
+  --radius-xl:   24px;   /* cards */
+  --radius-2xl:  32px;   /* sheets */
+  --radius-full: 999px;  /* botones tipo píldora */
+
+  /* ---------- Espaciado (escala de 4) ---------- */
+  --space-0:   0;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;   /* padding lateral estándar */
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+
+  /* ---------- Sombras (teñidas de teal, no negras) ---------- */
+  --shadow-sm:   0 1px 2px rgba(15, 95, 110, 0.06);
+  --shadow-md:   0 4px 12px rgba(15, 95, 110, 0.08);
+  --shadow-lg:   0 12px 28px rgba(15, 95, 110, 0.12);
+  --shadow-xl:   0 24px 48px rgba(15, 95, 110, 0.16);
+
+  /* Sombra interna sutil (para inputs presionados) */
+  --shadow-inset: inset 0 1px 2px rgba(15, 95, 110, 0.06);
+
+  /* Glow del anillo de progreso al alcanzar hito */
+  --glow-milestone: 0 0 0 6px rgba(217, 135, 106, 0.18);
+
+  /* ---------- Animación ---------- */
+  --ease-out-soft:   cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in-soft:    cubic-bezier(0.6, 0, 0.4, 1);
+  --ease-bounce:     cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-instant: 100ms;
+  --duration-micro:   180ms;
+  --duration-base:    320ms;
+  --duration-celebrate: 600ms;
+}
+
+/* =========================================================================
+   Estilos semánticos — usar estas clases en lugar de los tokens crudos
+   ========================================================================= */
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--lh-base);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display — Outfit, para titulares de pantalla */
+.text-display-xl,
+h1.display {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semi);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+}
+
+.text-display-lg,
+h2.display {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semi);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+}
+
+/* El número grande de la racha — el héroe */
+.text-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-semi);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Headers de pantalla / nav */
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semi);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  line-height: var(--lh-snug);
+  color: var(--ink);
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semi);
+  line-height: var(--lh-snug);
+  color: var(--ink);
+}
+
+/* Body */
+p, .text-body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--lh-base);
+  color: var(--ink-2);
+}
+
+.text-body-sm {
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  color: var(--ink-muted);
+}
+
+/* Labels y eyebrows */
+.text-label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--ink-muted);
+  letter-spacing: var(--tracking-wide);
+}
+
+.text-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+/* Mono — para fechas, IDs */
+.text-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
