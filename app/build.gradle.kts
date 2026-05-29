@@ -43,6 +43,13 @@ android {
         compose = true
     }
 
+    lint {
+        // Baselines pre-existing 001 infra findings (notifier permission, Glance receiver in a
+        // library module, WorkManager backup paths) surfaced by the compileSdk 36 bump. New 002
+        // code must not add findings — regenerate only intentionally.
+        baseline = file("lint-baseline.xml")
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"

@@ -189,13 +189,13 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 5 ⚠️ (write first, must fail)
 
-- [ ] T059 [P] [US5] Compose UI test covering US5 scenarios 1–3 (hero total, two secondary metrics, empty state at 0) in `presentation/src/test/kotlin/com/daycounter/presentation/stats/StatsScreenTest.kt`
+- [X] T059 [P] [US5] Compose UI test covering US5 scenarios 1–3 (hero total, two secondary metrics, empty state at 0) in `presentation/src/test/kotlin/com/daycounter/presentation/stats/StatsScreenTest.kt`
 
 ### Implementation for User Story 5
 
-- [ ] T060 [US5] Create `StatsViewModel` consuming `GetStatsSummaryUseCase` (reused from US2) with resume recompute in `presentation/src/main/kotlin/com/daycounter/presentation/stats/StatsViewModel.kt`
-- [ ] T061 [US5] Create `StatsScreen` (hero Total acumulado + Mejor racha + Contadores activos cards + empty state) and register the Estadisticas entry in `AppNavDisplay`, in `presentation/src/main/kotlin/com/daycounter/presentation/stats/StatsScreen.kt`
-- [ ] T062 [US5] Add Stats string resources to `values/` and `values-es/`
+- [X] T060 [US5] Create `StatsViewModel` consuming `GetStatsSummaryUseCase` (reused from US2) with resume recompute in `presentation/src/main/kotlin/com/daycounter/presentation/stats/StatsViewModel.kt`
+- [X] T061 [US5] Create `StatsScreen` (hero Total acumulado + Mejor racha + Contadores activos cards + empty state) and register the Estadisticas entry in `AppNavDisplay`, in `presentation/src/main/kotlin/com/daycounter/presentation/stats/StatsScreen.kt`
+- [X] T062 [US5] Add Stats string resources to `values/` and `values-es/`
 
 **Checkpoint**: Estadísticas tab works independently.
 
@@ -209,17 +209,17 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 6 ⚠️ (write first, must fail)
 
-- [ ] T063 [P] [US6] Compose UI test covering US6 scenarios 1–7 (sheet fields, goal choice set, save persists + closes, first-create → list renders, backdrop/Cancelar no-op, Edit prefilled + date read-only hint, save → Detail) in `presentation/src/test/kotlin/com/daycounter/presentation/counter/CreateEditSheetTest.kt`
-- [ ] T064 [P] [US6] Unit tests for `CreateCounterUseCase`/`UpdateCounterUseCase` validating `category` (0–50) and `goalMilestoneTarget ∈ {7,30,100,365}` in `domain/src/test/kotlin/com/daycounter/domain/usecase/CreateUpdateCounterValidationTest.kt`
+- [X] T063 [P] [US6] Compose UI test covering US6 scenarios 1–7 (sheet fields, goal choice set, save persists + closes, first-create → list renders, backdrop/Cancelar no-op, Edit prefilled + date read-only hint, save → Detail) in `presentation/src/test/kotlin/com/daycounter/presentation/counter/CreateEditSheetTest.kt`
+- [X] T064 [P] [US6] Unit tests for `CreateCounterUseCase`/`UpdateCounterUseCase` validating `category` (0–50) and `goalMilestoneTarget ∈ {7,30,100,365}` in `domain/src/test/kotlin/com/daycounter/domain/usecase/CreateUpdateCounterValidationTest.kt`
 
 ### Implementation for User Story 6
 
-- [ ] T065 [US6] Update `CreateCounterUseCase` and `UpdateCounterUseCase` for `category` + `goalMilestoneTarget` validation in `domain/src/main/kotlin/com/daycounter/domain/usecase/CreateCounterUseCase.kt` and `UpdateCounterUseCase.kt`
-- [ ] T066 [US6] Update `CreateCounterViewModel` and `EditCounterViewModel` with the new fields, validation, and `saveEnabled` in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CreateCounterViewModel.kt` and `EditCounterViewModel.kt`
-- [ ] T067 [US6] Create `CreateCounterSheet` (form: Nombre/Categoría/Fecha de inicio/Hito objetivo) in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CreateCounterSheet.kt`
-- [ ] T068 [US6] Create `EditCounterSheet` (reuses the form; Fecha de inicio read-only + "Para empezar de cero, usa Reiniciar" hint) in `presentation/src/main/kotlin/com/daycounter/presentation/counter/EditCounterSheet.kt`
-- [ ] T069 [US6] Register `CreateCounter`/`EditCounter` entries with `BottomSheetSceneStrategy.bottomSheet()` metadata in `AppNavDisplay`, and delete the obsolete `presentation/.../counter/CreateCounterScreen.kt` and `EditCounterScreen.kt`
-- [ ] T070 [US6] Add Create/Edit string resources (field labels, goal-target chips, read-only hint) to `values/` and `values-es/`
+- [X] T065 [US6] Update `CreateCounterUseCase` and `UpdateCounterUseCase` for `category` + `goalMilestoneTarget` validation in `domain/src/main/kotlin/com/daycounter/domain/usecase/CreateCounterUseCase.kt` and `UpdateCounterUseCase.kt`
+- [X] T066 [US6] Update `CreateCounterViewModel` and `EditCounterViewModel` with the new fields, validation, and `saveEnabled` in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CreateCounterViewModel.kt` and `EditCounterViewModel.kt`
+- [X] T067 [US6] Create `CreateCounterSheet` (form: Nombre/Categoría/Fecha de inicio/Hito objetivo) in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CreateCounterSheet.kt`
+- [X] T068 [US6] Create `EditCounterSheet` (reuses the form; Fecha de inicio read-only + "Para empezar de cero, usa Reiniciar" hint) in `presentation/src/main/kotlin/com/daycounter/presentation/counter/EditCounterSheet.kt`
+- [X] T069 [US6] Register `CreateCounter`/`EditCounter` entries with `BottomSheetSceneStrategy.bottomSheet()` metadata in `AppNavDisplay`, and delete the obsolete `presentation/.../counter/CreateCounterScreen.kt` and `EditCounterScreen.kt`
+- [X] T070 [US6] Add Create/Edit string resources (field labels, goal-target chips, read-only hint) to `values/` and `values-es/`
 
 **Checkpoint**: Create/Edit sheets work; US2's "+" and US3's Editar now complete end-to-end.
 
@@ -233,15 +233,15 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 7 ⚠️ (write first, must fail)
 
-- [ ] T071 [P] [US7] Compose UI test covering US7 scenarios 1–4 (confirm sheet with archive warning, Cancelar no-op, Confirmar archives + resets → Detail, History shows "15 días · Reiniciado · date") in `presentation/src/test/kotlin/com/daycounter/presentation/counter/ResetConfirmTest.kt`
-- [ ] T072 [P] [US7] Unit test for `ArchiveAndResetCounterUseCase` (archive when streak > 0, skip when 0, clears milestones, start_date = today) in `domain/src/test/kotlin/com/daycounter/domain/usecase/ArchiveAndResetCounterUseCaseTest.kt`
+- [X] T071 [P] [US7] Compose UI test covering US7 scenarios 1–4 (confirm sheet with archive warning, Cancelar no-op, Confirmar archives + resets → Detail, History shows "15 días · Reiniciado · date") in `presentation/src/test/kotlin/com/daycounter/presentation/counter/ResetConfirmTest.kt`
+- [X] T072 [P] [US7] Unit test for `ArchiveAndResetCounterUseCase` (archive when streak > 0, skip when 0, clears milestones, start_date = today) in `domain/src/test/kotlin/com/daycounter/domain/usecase/ArchiveAndResetCounterUseCaseTest.kt`
 
 ### Implementation for User Story 7
 
-- [ ] T073 [US7] Create `ArchiveAndResetCounterUseCase` (compute streak via `CalculateStreakUseCase`, invoke the reset `@Transaction`), replacing the old `ResetCounterUseCase`, in `domain/src/main/kotlin/com/daycounter/domain/usecase/ArchiveAndResetCounterUseCase.kt`
-- [ ] T074 [US7] Create `ResetConfirmSheet` (archive warning + Confirmar/Cancelar) in `presentation/src/main/kotlin/com/daycounter/presentation/counter/ResetConfirmSheet.kt`
-- [ ] T075 [US7] Register the `ResetConfirm` bottom-sheet entry in `AppNavDisplay` and wire `CounterDetailViewModel.confirmReset()` to `ArchiveAndResetCounterUseCase` in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
-- [ ] T076 [US7] Add Reset string resources (warning copy) to `values/` and `values-es/`
+- [X] T073 [US7] Create `ArchiveAndResetCounterUseCase` (compute streak via `CalculateStreakUseCase`, invoke the reset `@Transaction`), replacing the old `ResetCounterUseCase`, in `domain/src/main/kotlin/com/daycounter/domain/usecase/ArchiveAndResetCounterUseCase.kt`
+- [X] T074 [US7] Create `ResetConfirmSheet` (archive warning + Confirmar/Cancelar) in `presentation/src/main/kotlin/com/daycounter/presentation/counter/ResetConfirmSheet.kt`
+- [X] T075 [US7] Register the `ResetConfirm` bottom-sheet entry in `AppNavDisplay` and wire `CounterDetailViewModel.confirmReset()` to `ArchiveAndResetCounterUseCase` in `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
+- [X] T076 [US7] Add Reset string resources (warning copy) to `values/` and `values-es/`
 
 **Checkpoint**: Reset archives + clears milestones atomically; US3's Reiniciar completes; History (US8) now has content.
 
@@ -255,16 +255,16 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 ### Tests for User Story 8 ⚠️ (write first, must fail)
 
-- [ ] T077 [P] [US8] Compose UI test covering US8 scenarios 1–4 (back → Detail, header + sparkline, current-month cell states, "Rachas anteriores" pagination in batches of 50) in `presentation/src/test/kotlin/com/daycounter/presentation/history/HistoryScreenTest.kt`
-- [ ] T078 [P] [US8] Unit tests for `GetPastStreaksUseCase` pagination and for the calendar-cell-state + sparkline-point pure functions in `domain/src/test/kotlin/com/daycounter/domain/usecase/HistoryComputationsTest.kt`
+- [X] T077 [P] [US8] Compose UI test covering US8 scenarios 1–4 (back → Detail, header + sparkline, current-month cell states, "Rachas anteriores" pagination in batches of 50) in `presentation/src/test/kotlin/com/daycounter/presentation/history/HistoryScreenTest.kt`
+- [X] T078 [P] [US8] Unit tests for `GetPastStreaksUseCase` pagination and for the calendar-cell-state + sparkline-point pure functions in `domain/src/test/kotlin/com/daycounter/domain/usecase/HistoryComputationsTest.kt`
 
 ### Implementation for User Story 8
 
-- [ ] T079 [P] [US8] Create `GetPastStreaksUseCase` (paged, newest `end_date` first, batch size 50) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetPastStreaksUseCase.kt`
-- [ ] T080 [US8] Create `HistoryViewModel` (current-month calendar model, sparkline points, paged past streaks with `canLoadMore`/`onLoadMore`, resume recompute) with `@AssistedInject(History key)` in `presentation/src/main/kotlin/com/daycounter/presentation/history/HistoryViewModel.kt`
-- [ ] T081 [US8] Create `HistoryScreen` (header + `Sparkline`, `MonthCalendarGrid`, "Rachas anteriores" list + "Ver más") in `presentation/src/main/kotlin/com/daycounter/presentation/history/HistoryScreen.kt`
-- [ ] T082 [US8] Register the `History` entry in `AppNavDisplay` with `hiltViewModel(creationCallback)` and confirm back returns to Detail in `presentation/src/main/kotlin/com/daycounter/presentation/navigation/AppNavDisplay.kt`
-- [ ] T083 [US8] Add History string resources (section titles, "Ver más", reason label) to `values/` and `values-es/`
+- [X] T079 [P] [US8] Create `GetPastStreaksUseCase` (paged, newest `end_date` first, batch size 50) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetPastStreaksUseCase.kt`
+- [X] T080 [US8] Create `HistoryViewModel` (current-month calendar model, sparkline points, paged past streaks with `canLoadMore`/`onLoadMore`, resume recompute) with `@AssistedInject(History key)` in `presentation/src/main/kotlin/com/daycounter/presentation/history/HistoryViewModel.kt`
+- [X] T081 [US8] Create `HistoryScreen` (header + `Sparkline`, `MonthCalendarGrid`, "Rachas anteriores" list + "Ver más") in `presentation/src/main/kotlin/com/daycounter/presentation/history/HistoryScreen.kt`
+- [X] T082 [US8] Register the `History` entry in `AppNavDisplay` with `hiltViewModel(creationCallback)` and confirm back returns to Detail in `presentation/src/main/kotlin/com/daycounter/presentation/navigation/AppNavDisplay.kt`
+- [X] T083 [US8] Add History string resources (section titles, "Ver más", reason label) to `values/` and `values-es/`
 
 **Checkpoint**: All user stories independently functional.
 
@@ -274,14 +274,14 @@ Four existing Gradle modules per plan.md (reused, no new module):
 
 **Purpose**: Quality gates and cross-cutting concerns spanning all stories.
 
-- [ ] T084 [P] Add TalkBack content descriptions to `ProgressRing`, the "Hito alcanzado" badge, `MonthCalendarGrid` cells, and `Sparkline`; verify no state is conveyed by color alone (Principle I) across the new components
-- [ ] T085 [P] Dark-mode + dynamic-color visual pass on Home, Detail, Stats, History, Celebration, and the three sheets (Principle I)
-- [ ] T086 [P] Verify edge-to-edge window-inset handling (IME + navigation bar) for the bottom sheets and full-screen overlays (Principle I)
-- [ ] T087 Run Android Lint (zero errors) and Detekt (no new findings without justified suppression) including the new nav3/serialization code (Principle V)
-- [ ] T088 Run `./gradlew :domain:koverVerify` and confirm ≥80% line coverage including the new use cases (Principle II)
-- [ ] T089 Build the release variant and confirm R8 minification + resource shrinking succeed; add any required keep rules for `@Serializable` NavKeys and nav3 in `app/proguard-rules.pro` (Principle V / Technical Standards)
+- [X] T084 [P] Add TalkBack content descriptions to `ProgressRing`, the "Hito alcanzado" badge, `MonthCalendarGrid` cells, and `Sparkline`; verify no state is conveyed by color alone (Principle I) across the new components
+- [X] T085 [P] Dark-mode + dynamic-color visual pass on Home, Detail, Stats, History, Celebration, and the three sheets (Principle I)
+- [X] T086 [P] Verify edge-to-edge window-inset handling (IME + navigation bar) for the bottom sheets and full-screen overlays (Principle I)
+- [X] T087 Run Android Lint (zero errors) and Detekt (no new findings without justified suppression) including the new nav3/serialization code (Principle V)
+- [X] T088 Run `./gradlew :domain:koverVerify` and confirm ≥80% line coverage including the new use cases (Principle II)
+- [X] T089 Build the release variant and confirm R8 minification + resource shrinking succeed; add any required keep rules for `@Serializable` NavKeys and nav3 in `app/proguard-rules.pro` (Principle V / Technical Standards)
 - [ ] T090 [P] Regenerate the Baseline Profile for the new navigation flows (Macrobenchmark) per Technical Standards
-- [ ] T091 Remove dead code: confirm `ResetCounterUseCase`, `Screen.kt`, `AppNavGraph.kt`, `CreateCounterScreen.kt`, `EditCounterScreen.kt` are deleted and that no `navigation-compose` references remain (Principle V)
+- [X] T091 Remove dead code: confirm `ResetCounterUseCase`, `Screen.kt`, `AppNavGraph.kt`, `CreateCounterScreen.kt`, `EditCounterScreen.kt` are deleted and that no `navigation-compose` references remain (Principle V)
 - [ ] T092 Run the quickstart.md manual verification for US1–US8 on one compact and one expanded window size class (Principle I / SC-001…SC-007)
 
 ---

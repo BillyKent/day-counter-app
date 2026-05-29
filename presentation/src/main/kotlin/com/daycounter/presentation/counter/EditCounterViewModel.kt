@@ -3,14 +3,15 @@ package com.daycounter.presentation.counter
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.daycounter.domain.usecase.DeleteCounterUseCase
+import com.daycounter.domain.model.Counter
 import com.daycounter.domain.usecase.GetCounterByIdUseCase
-import com.daycounter.domain.usecase.ResetCounterUseCase
 import com.daycounter.domain.usecase.UpdateCounterUseCase
 import com.daycounter.presentation.widget.WidgetStateUpdater
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,26 +23,34 @@ import kotlinx.coroutines.launch
 data class EditCounterUiState(
     val counterId: Long = 0L,
     val goalName: String = "",
+    val category: String = "",
     val startDate: LocalDate? = null,
+    val goalMilestoneTarget: Int = Counter.DEFAULT_GOAL_TARGET,
     val isSaving: Boolean = false,
     val nameError: CreateCounterUiState.NameError? = null,
-    val dateError: CreateCounterUiState.DateError? = null,
-    val showResetDialog: Boolean = false,
-    val showDeleteDialog: Boolean = false,
+    val categoryError: CreateCounterUiState.CategoryError? = null,
 ) {
     val canSave: Boolean
-        get() = !isSaving && goalName.trim().isNotEmpty() && goalName.length <= 100
+        get() = !isSaving &&
+            goalName.trim().isNotEmpty() &&
+            goalName.length <= CreateCounterUiState.MAX_NAME &&
+            category.length <= CreateCounterUiState.MAX_CATEGORY &&
+            goalMilestoneTarget in Counter.GOAL_TARGETS
 }
 
-@HiltViewModel
-class EditCounterViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = EditCounterViewModel.Factory::class)
+class EditCounterViewModel @AssistedInject constructor(
+    @Assisted private val counterId: Long,
     private val getCounter: GetCounterByIdUseCase,
     private val updateCounter: UpdateCounterUseCase,
-    private val resetCounter: ResetCounterUseCase,
-    private val deleteCounter: DeleteCounterUseCase,
     private val widgetStateUpdater: WidgetStateUpdater,
     private val application: Application,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(counterId: Long): EditCounterViewModel
+    }
 
     private val _state = MutableStateFlow(EditCounterUiState())
     val state: StateFlow<EditCounterUiState> = _state.asStateFlow()
@@ -49,7 +58,7 @@ class EditCounterViewModel @Inject constructor(
     private val _events = Channel<UiEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    fun load(counterId: Long) {
+    init {
         viewModelScope.launch {
             val c = getCounter(counterId)
             if (c == null) {
@@ -60,19 +69,17 @@ class EditCounterViewModel @Inject constructor(
                 it.copy(
                     counterId = c.id,
                     goalName = c.goalName,
+                    category = c.category.orEmpty(),
                     startDate = c.startDate,
+                    goalMilestoneTarget = c.goalMilestoneTarget,
                 )
             }
         }
     }
 
-    fun onGoalNameChange(value: String) {
-        _state.update { it.copy(goalName = value, nameError = null) }
-    }
-
-    fun onStartDateChange(date: LocalDate?) {
-        _state.update { it.copy(startDate = date, dateError = null) }
-    }
+    fun onGoalNameChange(value: String) = _state.update { it.copy(goalName = value, nameError = null) }
+    fun onCategoryChange(value: String) = _state.update { it.copy(category = value, categoryError = null) }
+    fun onGoalTargetChange(target: Int) = _state.update { it.copy(goalMilestoneTarget = target) }
 
     fun onSave() {
         if (_state.value.isSaving) return
@@ -83,7 +90,9 @@ class EditCounterViewModel @Inject constructor(
                 val result = updateCounter(
                     counterId = s.counterId,
                     goalName = s.goalName,
-                    startDate = s.startDate,
+                    startDate = s.startDate, // read-only in the UI; sent unchanged
+                    category = s.category,
+                    goalMilestoneTarget = s.goalMilestoneTarget,
                 )
                 when (result) {
                     is UpdateCounterUseCase.Result.Success -> {
@@ -91,7 +100,7 @@ class EditCounterViewModel @Inject constructor(
                         _events.send(UiEvent.Done)
                     }
                     is UpdateCounterUseCase.Result.NotFound -> _events.send(UiEvent.Done)
-                    is UpdateCounterUseCase.Result.ValidationError -> applyValidationError(result)
+                    is UpdateCounterUseCase.Result.ValidationError -> applyValidationError(result.failure)
                 }
             } catch (e: Exception) {
                 _events.send(UiEvent.ShowStorageError)
@@ -101,47 +110,13 @@ class EditCounterViewModel @Inject constructor(
         }
     }
 
-    fun requestReset() = _state.update { it.copy(showResetDialog = true) }
-    fun requestDelete() = _state.update { it.copy(showDeleteDialog = true) }
-    fun dismissDialogs() = _state.update { it.copy(showResetDialog = false, showDeleteDialog = false) }
-
-    fun confirmReset() {
-        _state.update { it.copy(showResetDialog = false) }
-        viewModelScope.launch {
-            try {
-                val id = _state.value.counterId
-                resetCounter(id)
-                widgetStateUpdater.refreshForCounter(application.applicationContext, id)
-                _events.send(UiEvent.Done)
-            } catch (e: Exception) {
-                _events.send(UiEvent.ShowStorageError)
-            }
-        }
-    }
-
-    fun confirmDelete() {
-        _state.update { it.copy(showDeleteDialog = false) }
-        viewModelScope.launch {
-            try {
-                val id = _state.value.counterId
-                deleteCounter(id)
-                widgetStateUpdater.refreshForCounter(application.applicationContext, id)
-                _events.send(UiEvent.Done)
-            } catch (e: Exception) {
-                _events.send(UiEvent.ShowStorageError)
-            }
-        }
-    }
-
-    private fun applyValidationError(error: UpdateCounterUseCase.Result.ValidationError) {
+    private fun applyValidationError(failure: UpdateCounterUseCase.ValidationFailure) {
         _state.update {
-            when (error.failure) {
-                UpdateCounterUseCase.ValidationFailure.NameBlank ->
-                    it.copy(nameError = CreateCounterUiState.NameError.Blank)
-                UpdateCounterUseCase.ValidationFailure.NameTooLong ->
-                    it.copy(nameError = CreateCounterUiState.NameError.TooLong)
-                UpdateCounterUseCase.ValidationFailure.FutureStartDate ->
-                    it.copy(dateError = CreateCounterUiState.DateError.Future)
+            when (failure) {
+                UpdateCounterUseCase.ValidationFailure.NameBlank -> it.copy(nameError = CreateCounterUiState.NameError.Blank)
+                UpdateCounterUseCase.ValidationFailure.NameTooLong -> it.copy(nameError = CreateCounterUiState.NameError.TooLong)
+                UpdateCounterUseCase.ValidationFailure.CategoryTooLong -> it.copy(categoryError = CreateCounterUiState.CategoryError.TooLong)
+                else -> it
             }
         }
     }

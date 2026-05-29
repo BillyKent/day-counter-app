@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.daycounter.data.datastore.NotificationPreferencesDataStore
+import com.daycounter.domain.model.Counter
 import com.daycounter.domain.usecase.CreateCounterUseCase
 import com.daycounter.presentation.widget.WidgetStateUpdater
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,16 +20,29 @@ import kotlinx.coroutines.launch
 
 data class CreateCounterUiState(
     val goalName: String = "",
+    val category: String = "",
     val startDate: LocalDate? = null,
+    val goalMilestoneTarget: Int = Counter.DEFAULT_GOAL_TARGET,
     val isSaving: Boolean = false,
     val nameError: NameError? = null,
+    val categoryError: CategoryError? = null,
     val dateError: DateError? = null,
 ) {
     val canSave: Boolean
-        get() = !isSaving && goalName.trim().isNotEmpty() && goalName.length <= 100
+        get() = !isSaving &&
+            goalName.trim().isNotEmpty() &&
+            goalName.length <= MAX_NAME &&
+            category.length <= MAX_CATEGORY &&
+            goalMilestoneTarget in Counter.GOAL_TARGETS
 
     enum class NameError { Blank, TooLong }
+    enum class CategoryError { TooLong }
     enum class DateError { Future }
+
+    companion object {
+        const val MAX_NAME = 100
+        const val MAX_CATEGORY = 50
+    }
 }
 
 @HiltViewModel
@@ -45,41 +59,35 @@ class CreateCounterViewModel @Inject constructor(
         viewModelScope.launch { notificationPrefs.setPermissionRequested() }
     }
 
-
     private val _state = MutableStateFlow(CreateCounterUiState())
     val state: StateFlow<CreateCounterUiState> = _state.asStateFlow()
 
     private val _events = Channel<UiEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    fun onGoalNameChange(value: String) {
-        _state.update {
-            it.copy(
-                goalName = value,
-                nameError = null,
-            )
-        }
-    }
-
-    fun onStartDateChange(date: LocalDate?) {
-        _state.update { it.copy(startDate = date, dateError = null) }
-    }
+    fun onGoalNameChange(value: String) = _state.update { it.copy(goalName = value, nameError = null) }
+    fun onCategoryChange(value: String) = _state.update { it.copy(category = value, categoryError = null) }
+    fun onStartDateChange(date: LocalDate?) = _state.update { it.copy(startDate = date, dateError = null) }
+    fun onGoalTargetChange(target: Int) = _state.update { it.copy(goalMilestoneTarget = target) }
 
     fun onSave() {
         if (_state.value.isSaving) return
         _state.update { it.copy(isSaving = true) }
         viewModelScope.launch {
             try {
+                val s = _state.value
                 val result = createCounter(
-                    goalName = _state.value.goalName,
-                    startDate = _state.value.startDate,
+                    goalName = s.goalName,
+                    startDate = s.startDate,
+                    category = s.category,
+                    goalMilestoneTarget = s.goalMilestoneTarget,
                 )
                 when (result) {
                     is CreateCounterUseCase.Result.Success -> {
                         widgetStateUpdater.refreshForCounter(application.applicationContext, result.id)
                         _events.send(UiEvent.NavigateBack)
                     }
-                    is CreateCounterUseCase.Result.ValidationError -> applyValidationError(result)
+                    is CreateCounterUseCase.Result.ValidationError -> applyValidationError(result.failure)
                 }
             } catch (e: Exception) {
                 _events.send(UiEvent.ShowStorageError)
@@ -89,15 +97,14 @@ class CreateCounterViewModel @Inject constructor(
         }
     }
 
-    private fun applyValidationError(error: CreateCounterUseCase.Result.ValidationError) {
+    private fun applyValidationError(failure: CreateCounterUseCase.ValidationFailure) {
         _state.update {
-            when (error.failure) {
-                CreateCounterUseCase.ValidationFailure.NameBlank ->
-                    it.copy(nameError = CreateCounterUiState.NameError.Blank)
-                CreateCounterUseCase.ValidationFailure.NameTooLong ->
-                    it.copy(nameError = CreateCounterUiState.NameError.TooLong)
-                CreateCounterUseCase.ValidationFailure.FutureStartDate ->
-                    it.copy(dateError = CreateCounterUiState.DateError.Future)
+            when (failure) {
+                CreateCounterUseCase.ValidationFailure.NameBlank -> it.copy(nameError = CreateCounterUiState.NameError.Blank)
+                CreateCounterUseCase.ValidationFailure.NameTooLong -> it.copy(nameError = CreateCounterUiState.NameError.TooLong)
+                CreateCounterUseCase.ValidationFailure.CategoryTooLong -> it.copy(categoryError = CreateCounterUiState.CategoryError.TooLong)
+                CreateCounterUseCase.ValidationFailure.InvalidGoalTarget -> it // not user-reachable (chips constrain choice)
+                CreateCounterUseCase.ValidationFailure.FutureStartDate -> it.copy(dateError = CreateCounterUiState.DateError.Future)
             }
         }
     }
