@@ -81,6 +81,37 @@ class CounterDetailScreenTest {
     }
 
     @Test
+    fun `paused state shows banner and resume action`() {
+        render(loadedState(streak = 9).copy(isPaused = true, pausedDays = 5))
+        compose.onNodeWithTag("detail_paused_banner").assertIsDisplayed()
+        compose.onNodeWithTag("detail_toggle_pause").performScrollTo().assertIsDisplayed()
+        // While paused, the toggle reads "Resume counter".
+        compose.onNodeWithText("Resume counter").assertIsDisplayed()
+        // The next-milestone hint is hidden while paused.
+        compose.onNodeWithTag("detail_next_milestone").assertDoesNotExist()
+    }
+
+    @Test
+    fun `toggle pause invokes callback`() {
+        var toggled = false
+        compose.setContent {
+            DayCounterTheme {
+                CounterDetailContent(
+                    state = loadedState(streak = 12),
+                    counterId = 1L,
+                    actions = noopActions(),
+                    onTogglePause = { toggled = true },
+                    onRequestDelete = {},
+                    onConfirmDelete = {},
+                    onDismissDelete = {},
+                )
+            }
+        }
+        compose.onNodeWithTag("detail_toggle_pause").performScrollTo().performClick()
+        assertEquals(true, toggled)
+    }
+
+    @Test
     fun `achieved chips are non-interactive`() {
         render(loadedState(streak = 35))
         compose.onNodeWithTag("achieved_chip_1").assertHasNoClickAction()

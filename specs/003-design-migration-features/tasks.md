@@ -130,8 +130,8 @@ no milestone while paused; history unchanged; survives restart.
 
 - [X] T046 [P] [US2] Unit test `PauseResumeUseCaseTest` (pause/resume delegate to repo with today) in `domain/src/test/kotlin/com/daycounter/domain/usecase/`
 - [ ] T047 [P] [US2] Integration test: pause/resume `@Transaction` (one PausePeriod inserted, status flip, no milestone/past-streak change) in `data/src/test/kotlin/com/daycounter/data/`
-- [ ] T048 [P] [US2] Compose test: Detail paused state (dashed ring, "En pausa", banner, Reanudar) in `presentation/src/test/kotlin/com/daycounter/presentation/counter/PauseDetailTest.kt`
-- [ ] T049 [P] [US2] Compose test: Home filter chips filter + live counts + empty states in `presentation/src/test/kotlin/com/daycounter/presentation/home/FilterChipsTest.kt`
+- [X] T048 [P] [US2] Compose test: Detail paused state (banner, Reanudar, hint hidden) + toggle callback in `CounterDetailScreenTest.kt`
+- [X] T049 [P] [US2] Filter test: `HomeViewModelFilterTest` (counts + filter narrows list by paused/active)
 
 ### Implementation
 
