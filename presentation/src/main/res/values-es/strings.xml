@@ -105,6 +105,8 @@
 
     <!-- Celebración de hito -->
     <string name="celebration_keep_going">Seguir así</string>
+    <string name="celebration_share">Compartir</string>
+    <string name="celebration_share_text">%1$s — %2$d días. Cada día cuenta.</string>
     <string name="celebration_close">Cerrar</string>
     <string name="celebration_message_1">Día 1. El más difícil ya empezó.</string>
     <string name="celebration_message_7">Una semana completa. Esto ya es un hábito que empieza.</string>

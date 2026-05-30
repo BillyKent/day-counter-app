@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import android.content.Intent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -17,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,10 +27,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.daycounter.presentation.R
@@ -44,13 +48,30 @@ fun MilestoneCelebrationScreen(
     ),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    CelebrationContent(state = state, onClose = onClose)
+    val context = LocalContext.current
+    val shareText = stringResource(R.string.celebration_share_text, state.counterName, state.milestone)
+    CelebrationContent(
+        state = state,
+        onClose = onClose,
+        onShare = {
+            val send = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, shareText)
+            }
+            ContextCompat.startActivity(
+                context,
+                Intent.createChooser(send, null),
+                null,
+            )
+        },
+    )
 }
 
 @Composable
 internal fun CelebrationContent(
     state: CelebrationUiState,
     onClose: () -> Unit,
+    onShare: () -> Unit,
 ) {
     var animateTarget by remember { mutableStateOf(0) }
     LaunchedEffect(state.milestone) { animateTarget = state.milestone }
@@ -117,6 +138,16 @@ internal fun CelebrationContent(
                         .testTag("celebration_keep_going"),
                 ) {
                     Text(stringResource(R.string.celebration_keep_going))
+                }
+                TextButton(
+                    onClick = onShare,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .sizeIn(minHeight = 48.dp)
+                        .padding(top = 4.dp)
+                        .testTag("celebration_share"),
+                ) {
+                    Text(stringResource(R.string.celebration_share))
                 }
             }
         }

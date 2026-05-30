@@ -28,6 +28,7 @@ class MilestoneCelebrationTest {
                 CelebrationContent(
                     state = CelebrationUiState(milestone = 7, counterName = "Read daily", messageRes = R.string.celebration_message_7),
                     onClose = {},
+                    onShare = {},
                 )
             }
         }
@@ -38,6 +39,23 @@ class MilestoneCelebrationTest {
     }
 
     @Test
+    fun `shows share action and invokes onShare`() {
+        var shared = false
+        compose.setContent {
+            DayCounterTheme {
+                CelebrationContent(
+                    state = CelebrationUiState(milestone = 100, counterName = "Run", messageRes = R.string.celebration_message_100),
+                    onClose = {},
+                    onShare = { shared = true },
+                )
+            }
+        }
+        compose.onNodeWithTag("celebration_share").assertIsDisplayed()
+        compose.onNodeWithTag("celebration_share").performClick()
+        assertEquals(true, shared)
+    }
+
+    @Test
     fun `close and keep-going both invoke onClose`() {
         var closeCount = 0
         compose.setContent {
@@ -45,6 +63,7 @@ class MilestoneCelebrationTest {
                 CelebrationContent(
                     state = CelebrationUiState(milestone = 30, counterName = "Run", messageRes = R.string.celebration_message_30),
                     onClose = { closeCount++ },
+                    onShare = {},
                 )
             }
         }

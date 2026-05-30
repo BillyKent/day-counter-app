@@ -105,6 +105,8 @@
 
     <!-- Milestone celebration -->
     <string name="celebration_keep_going">Keep it up</string>
+    <string name="celebration_share">Share</string>
+    <string name="celebration_share_text">%1$s — %2$d days. Every day counts.</string>
     <string name="celebration_close">Close</string>
     <string name="celebration_message_1">Day 1. The hardest part has begun.</string>
     <string name="celebration_message_7">A full week. This is becoming a habit.</string>
