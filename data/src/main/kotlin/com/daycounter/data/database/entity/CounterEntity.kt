@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.daycounter.domain.model.Counter
+import com.daycounter.domain.model.CounterStatus
 import java.time.Instant
 import java.time.LocalDate
 
@@ -21,6 +22,10 @@ data class CounterEntity(
     val category: String? = null,
     @ColumnInfo(name = "goal_milestone_target", defaultValue = "30")
     val goalMilestoneTarget: Int = Counter.DEFAULT_GOAL_TARGET,
+    @ColumnInfo(name = "status", defaultValue = "ACTIVE")
+    val status: CounterStatus = CounterStatus.ACTIVE,
+    @ColumnInfo(name = "paused_since")
+    val pausedSince: LocalDate? = null,
 )
 
 /** Maps a persisted [CounterEntity] to its pure-Kotlin [Counter] domain model. */
@@ -31,6 +36,8 @@ fun CounterEntity.toDomain(): Counter = Counter(
     createdAt = createdAt,
     category = category,
     goalMilestoneTarget = goalMilestoneTarget,
+    status = status,
+    pausedSince = pausedSince,
 )
 
 /** Maps a [Counter] domain model to its [CounterEntity] for persistence. */
@@ -41,4 +48,6 @@ fun Counter.toEntity(): CounterEntity = CounterEntity(
     createdAt = createdAt,
     category = category,
     goalMilestoneTarget = goalMilestoneTarget,
+    status = status,
+    pausedSince = pausedSince,
 )

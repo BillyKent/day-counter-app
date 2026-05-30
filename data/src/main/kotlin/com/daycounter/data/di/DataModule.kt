@@ -6,14 +6,19 @@ import com.daycounter.data.database.AppDatabase
 import com.daycounter.data.database.dao.CounterDao
 import com.daycounter.data.database.dao.MilestoneRecordDao
 import com.daycounter.data.database.dao.PastStreakRecordDao
+import com.daycounter.data.database.dao.PausePeriodDao
 import com.daycounter.data.database.dao.WidgetBindingDao
 import com.daycounter.data.repository.CounterRepositoryImpl
 import com.daycounter.data.repository.MilestoneRepositoryImpl
 import com.daycounter.data.repository.PastStreakRepositoryImpl
+import com.daycounter.data.repository.PausePeriodRepositoryImpl
+import com.daycounter.data.repository.SettingsRepositoryImpl
 import com.daycounter.data.repository.WidgetBindingRepositoryImpl
 import com.daycounter.domain.repository.CounterRepository
 import com.daycounter.domain.repository.MilestoneRepository
 import com.daycounter.domain.repository.PastStreakRepository
+import com.daycounter.domain.repository.PausePeriodRepository
+import com.daycounter.domain.repository.SettingsRepository
 import com.daycounter.domain.repository.WidgetBindingRepository
 import dagger.Binds
 import dagger.Module
@@ -51,6 +56,9 @@ object DataModule {
     fun providePastStreakRecordDao(db: AppDatabase): PastStreakRecordDao = db.pastStreakRecordDao()
 
     @Provides
+    fun providePausePeriodDao(db: AppDatabase): PausePeriodDao = db.pausePeriodDao()
+
+    @Provides
     fun provideWidgetBindingDao(db: AppDatabase): WidgetBindingDao = db.widgetBindingDao()
 }
 
@@ -73,4 +81,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindWidgetBindingRepository(impl: WidgetBindingRepositoryImpl): WidgetBindingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPausePeriodRepository(impl: PausePeriodRepositoryImpl): PausePeriodRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
 }

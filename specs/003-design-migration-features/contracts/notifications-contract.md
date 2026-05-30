@@ -20,7 +20,9 @@ No emoji in UI/notification bodies; the milestone push title MAY carry one optio
   1. if toggle off → return success (no post, no reschedule).
   2. post daily reminder notification (localized; "Buenos días" style, references active counters).
   3. re-enqueue self for next day (+24h) → unique `REPLACE`.
-- Re-arm on boot and app start by calling `schedule(enabled, time)` (idempotent unique work).
+- Re-arm via a `BOOT_COMPLETED` BroadcastReceiver (declared `android:exported="true"`, requires
+  `RECEIVE_BOOT_COMPLETED`) **and** on app start, both calling `schedule(enabled, time)` (idempotent
+  unique work).
 - Test (work-testing): next-occurrence delay across midnight; disabled cancels; worker re-enqueues.
 
 ## Approaching-milestone (FR-025b, SHOULD)

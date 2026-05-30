@@ -54,11 +54,13 @@ Presets: Mañana `08:00`, Mediodía `13:00`, Noche `21:00`.
 
 ### 1.7 Derived stats models
 - `StatsSummary` (extended): `totalEffectiveDays`, `bestStreak`, `activeCount` (excludes paused),
-  `milestonesReached` (Σ milestones ≤ effectiveDays per counter), `averageStreak` (totalEffective /
-  counterCount).
+  `milestonesReached` (Σ over counters of `|{ m ∈ {1,7,30,100,365,1000} : m ≤ effectiveDays }|`),
+  `averageStreak` (totalEffective / counterCount).
 - `PauseStats` (NEW): `pausedNow: Int`, `totalPausedDays: Int`, `totalPauses: Int`.
 - `WeeklyActivity` (NEW): `days: List<DayBar>` (7 entries, `label` + `fulfilled: Int`), `weekTotal`,
-  `todayIndex`.
+  `todayIndex`. `fulfilled` per day = count of counters ACTIVE and in-streak that day (`startDate ≤
+  day`, day not within any paused interval, and `day < pausedSince` if currently paused) — per spec
+  Assumptions "Weekly activity".
 - `DataSnapshot` (NEW, for undo): immutable copy of all counters, pause periods, milestone records,
   past streaks.
 

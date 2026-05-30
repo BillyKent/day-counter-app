@@ -24,7 +24,7 @@ Events: SetFilter(filter), OpenCounter(id), CreateNew
 ```
 UiState(counter, effectiveDays, isPaused, pausedTotalDays, nextMilestone, daysToNext,
         achievedMilestones, canShowCelebration)
-Events: TogglePause, Edit, Reset, Delete, OpenHistory, ShareMilestone?
+Events: TogglePause, Edit, Reset, Delete, OpenHistory, ShareMilestone
 ```
 - `TogglePause` → Pause/Resume use case; paused renders dashed/muted ring + "En pausa" + banner
   ("Sin notificaciones · N días en pausa") + primary "Reanudar" (FR-007..FR-011).

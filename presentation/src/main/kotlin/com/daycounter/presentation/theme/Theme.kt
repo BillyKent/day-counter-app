@@ -1,14 +1,11 @@
 package com.daycounter.presentation.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
 
 private val LightColors = lightColorScheme(
     primary = Primary,
@@ -27,44 +24,56 @@ private val LightColors = lightColorScheme(
     onBackground = OnBackgroundLight,
     surface = SurfaceLight,
     onSurface = OnSurfaceLight,
+    surfaceVariant = SurfaceVariantLight,
+    onSurfaceVariant = OnSurfaceVariantLight,
+    outline = OutlineLight,
 )
 
 private val DarkColors = darkColorScheme(
-    primary = PrimaryContainer,
-    onPrimary = OnPrimaryContainer,
-    primaryContainer = Primary,
-    onPrimaryContainer = OnPrimary,
-    secondary = SecondaryContainer,
-    onSecondary = OnSecondaryContainer,
-    tertiary = Tertiary,
-    onTertiary = OnTertiary,
+    primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = OnPrimaryContainerDark,
+    secondary = SecondaryDark,
+    onSecondary = OnSecondaryDark,
+    secondaryContainer = SecondaryContainerDark,
+    onSecondaryContainer = OnSecondaryContainerDark,
+    tertiary = TertiaryDark,
+    onTertiary = OnTertiaryDark,
     error = ErrorColor,
     onError = OnError,
     background = BackgroundDark,
     onBackground = OnBackgroundDark,
     surface = SurfaceDark,
     onSurface = OnSurfaceDark,
+    surfaceVariant = SurfaceVariantDark,
+    onSurfaceVariant = OnSurfaceVariantDark,
+    outline = OutlineDark,
 )
 
-/** MD3 theme with dynamic color (API 31+) and dark mode support. */
+/**
+ * Day Counter Material 3 theme. Uses the fixed Claude Design brand palette; **dynamic color
+ * (Material You) is disabled** by default in favor of the brand identity (constitution v2.3.0).
+ * Dark mode is fully supported. The extended brand palette is exposed via [LocalDayCounterColors].
+ *
+ * @param darkTheme whether to use the dark palette; resolved from the appearance preference at the
+ *   call site (US7) and defaulting to the system setting.
+ */
 @Composable
 fun DayCounterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    @Suppress("UNUSED_PARAMETER") dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColors
-        else -> LightColors
-    }
+    val colorScheme = if (darkTheme) DarkColors else LightColors
+    val extended = if (darkTheme) DarkDayCounterColors else LightDayCounterColors
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content,
-    )
+    CompositionLocalProvider(LocalDayCounterColors provides extended) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            shapes = AppShapes,
+            content = content,
+        )
+    }
 }

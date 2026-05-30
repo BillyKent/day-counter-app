@@ -36,4 +36,13 @@ interface CounterRepository {
         today: LocalDate,
         now: Instant,
     )
+
+    /** Pauses an active counter (sets status=PAUSED, pausedSince=[today]). No-op if already paused. */
+    suspend fun pause(counterId: Long, today: LocalDate)
+
+    /**
+     * Resumes a paused counter: banks the current pause as a [com.daycounter.domain.model.PausePeriod]
+     * (pausedSince → [today]) and sets status=ACTIVE. No-op if already active. One transaction.
+     */
+    suspend fun resume(counterId: Long, today: LocalDate)
 }

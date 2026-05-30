@@ -74,6 +74,36 @@ interface CounterDao {
             )
         }
         deleteMilestonesForCounter(counterId)
+        deletePausePeriodsForCounter(counterId)
         updateStartDate(counterId, today)
+        setActive(counterId)
+    }
+
+    // ---- Pause / resume primitives (FR-007..FR-013) ----
+
+    @Query("SELECT paused_since FROM counters WHERE id = :counterId")
+    suspend fun pausedSince(counterId: Long): LocalDate?
+
+    @Query("UPDATE counters SET status = 'PAUSED', paused_since = :today WHERE id = :counterId AND status = 'ACTIVE'")
+    suspend fun pause(counterId: Long, today: LocalDate)
+
+    @Query("UPDATE counters SET status = 'ACTIVE', paused_since = NULL WHERE id = :counterId")
+    suspend fun setActive(counterId: Long)
+
+    @Query("INSERT INTO pause_periods (counter_id, start_date, end_date) VALUES (:counterId, :start, :end)")
+    suspend fun insertPausePeriod(counterId: Long, start: LocalDate, end: LocalDate)
+
+    @Query("DELETE FROM pause_periods WHERE counter_id = :counterId")
+    suspend fun deletePausePeriodsForCounter(counterId: Long)
+
+    /**
+     * Atomically resumes a paused counter: banks the open pause interval (pausedSince → [today]) and
+     * flips the counter to ACTIVE. No-op if the counter is not currently paused.
+     */
+    @Transaction
+    suspend fun resume(counterId: Long, today: LocalDate) {
+        val since = pausedSince(counterId) ?: return
+        insertPausePeriod(counterId, since, today)
+        setActive(counterId)
     }
 }

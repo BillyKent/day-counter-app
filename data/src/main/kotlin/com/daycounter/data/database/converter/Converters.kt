@@ -1,12 +1,20 @@
 package com.daycounter.data.database.converter
 
 import androidx.room.TypeConverter
+import com.daycounter.domain.model.CounterStatus
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-/** Room type converters for `java.time` values. */
+/** Room type converters for `java.time` values and domain enums. */
 class Converters {
+
+    @TypeConverter
+    fun fromCounterStatus(value: CounterStatus?): String? = value?.name
+
+    @TypeConverter
+    fun toCounterStatus(value: String?): CounterStatus? =
+        value?.let { runCatching { CounterStatus.valueOf(it) }.getOrDefault(CounterStatus.ACTIVE) }
 
     @TypeConverter
     fun fromLocalDate(value: LocalDate?): String? =

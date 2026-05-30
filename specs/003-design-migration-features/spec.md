@@ -301,6 +301,10 @@ light and dark palettes and that the choice persists.
 - **FR-006b**: The home-screen Widget MUST be re-skinned to the new design and support the handoff's
   widget layouts (a featured-streak banner, a single-counter view with a 7-day mini-bar week, and a
   multi-counter list), updating at least daily.
+- **FR-006c**: The Create/Edit counter forms MUST present category as a fixed, localized chip set —
+  the handoff set {Salud, Ejercicio, Ahorro, Estudio, Mente} — storing a stable key and displaying
+  the localized label. Pre-existing free-text categories display as-is but are not offered as new
+  choices.
 
 **Pause / Resume + Filtering**
 
@@ -318,7 +322,9 @@ light and dark palettes and that the choice persists.
 - **FR-012**: Pausing/resuming MUST NOT archive a past streak, delete milestone records, or otherwise
   alter History — pause is distinct from Reset and Delete.
 - **FR-013**: A counter's status (active/paused), its completed paused intervals, and the current
-  paused-since point MUST persist across app restarts.
+  paused-since point MUST persist across app restarts. Resetting a counter additionally clears any
+  paused state (status→active, paused-since cleared) and removes that counter's pause periods, since
+  the streak restarts.
 - **FR-014**: The Contadores list MUST offer Todos / Activos / Pausados filters that filter the list
   live, each showing a live count, with a filter-appropriate empty state.
 - **FR-015**: Paused counters MUST be excluded from the "active counters" metric; their effective
@@ -359,7 +365,9 @@ light and dark palettes and that the choice persists.
 **Expanded Statistics**
 
 - **FR-026**: Estadísticas MUST show, in effective (paused-excluded) days: Total acumulado (hero),
-  Mejor racha, Hitos alcanzados (count across counters), Contadores activos, and Racha media.
+  Mejor racha, Hitos alcanzados, Contadores activos, and Racha media. "Hitos alcanzados" counts,
+  across all counters, the number of milestones from the canonical set `{1, 7, 30, 100, 365, 1000}`
+  whose day value is ≤ that counter's effective day count.
 - **FR-027**: Estadísticas MUST include a Pausas card showing "en pausa ahora", "días pausados", and
   "pausas totales".
 - **FR-028**: Estadísticas MUST include a weekly activity view (7 bars) with today emphasized and a
@@ -425,9 +433,11 @@ light and dark palettes and that the choice persists.
 - **Milestone set / goal targets**: unchanged from the current app — celebrations at 1/7/30/100/365/
   1000 days; selectable goal targets unchanged. The handoff's milestone messaging matches existing
   Spanish copy.
-- **Weekly activity ("Esta semana")**: a derived 7-day view of days fulfilled across counters
-  (active, paused excluded); exact per-day definition to be finalized in planning. Treated as a
-  read-only insight, not new tracked data.
+- **Weekly activity ("Esta semana")**: for each of the last 7 days (ending today), "días cumplidos" =
+  the count of counters that were ACTIVE and in-streak on that day — i.e., `startDate ≤ day`, the day
+  is not inside any paused interval, and (for a currently-paused counter) `day < pausedSince`.
+  `weekTotal` = sum of the 7 values; today is the last/emphasized bar. A read-only insight, not new
+  tracked data.
 - **Daily reminder content**: a single motivational daily nudge (not per-counter), in the selected
   language, with no emoji in-app; large-milestone push may optionally include one emoji.
 - **Data posture**: consistent with prior iterations, no production data must be preserved;
@@ -439,10 +449,9 @@ light and dark palettes and that the choice persists.
   bundled in the production app even though the web kit references CDNs.
 - **Voice**: in-app copy stays Spanish-first per the brand brief (informal "tú", no emoji); other
   languages are translations of the same copy.
-- **Category input**: the handoff Create/Edit sheets present **category as a fixed chip set** (Salud,
-  Ejercicio, Ahorro, Estudio, Mente) rather than the current free-text field. This spec assumes the
-  app moves to a predefined category chip set (final list confirmable in planning); existing
-  free-text categories degrade gracefully.
+- **Category input** (see FR-006c): the Create/Edit sheets move from free-text to a **fixed localized
+  chip set** — confirmed list {Salud, Ejercicio, Ahorro, Estudio, Mente}. A stable key is stored;
+  existing free-text categories degrade gracefully (display-only).
 - **Notifications scope**: three notification types are in scope (milestone, daily reminder,
   approaching-milestone), all gated by their respective toggles and the OS permission, and all
   suppressed for paused counters.

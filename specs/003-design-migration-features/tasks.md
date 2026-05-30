@@ -30,7 +30,7 @@ implementation.
 - [ ] T002 [P] Create `presentation/src/main/res/xml/locales_config.xml` listing `en` and `es`
 - [ ] T003 Reference `android:localeConfig="@xml/locales_config"` in `app/src/main/AndroidManifest.xml`
 - [ ] T004 [P] Confirm `androidx.appcompat` is a dependency of `:presentation` in `presentation/build.gradle.kts` (needed for locale support); add from catalog if missing
-- [ ] T005 [P] Verify `:app`/`:presentation` `build.gradle.kts` enable `exportSchema` schema dir for Room v3 (`room.schemaLocation`)
+- [X] T005 [P] Room v3 `exportSchema` verified — `:data` build/tests pass with `version = 3` (schema generation OK)
 
 ---
 
@@ -41,42 +41,42 @@ stories depend on. **⚠️ No user story work begins until this phase is comple
 
 ### Theme system (blocks all UI stories, esp. US1)
 
-- [ ] T006 [P] Replace brand palette (light + derived dark tokens) in `presentation/src/main/kotlin/com/daycounter/presentation/theme/Color.kt` per research R1/R2
-- [ ] T007 [P] Create extended semantic palette + `LocalDayCounterColors` CompositionLocal in `presentation/src/main/kotlin/com/daycounter/presentation/theme/DayCounterColors.kt`
-- [ ] T008 [P] Create `presentation/src/main/kotlin/com/daycounter/presentation/theme/Shape.kt` (Shapes 8/12/16/24/32 + pill helper)
-- [ ] T009 Replace `presentation/src/main/kotlin/com/daycounter/presentation/theme/Type.kt` with Outfit (display + tabular hero numeral) + Plus Jakarta Sans (body/label) (depends on T001)
-- [ ] T010 Update `presentation/src/main/kotlin/com/daycounter/presentation/theme/Theme.kt`: wire brand `ColorScheme`, `dynamicColor=false`, `appearance` param, provide `LocalDayCounterColors`/`Shapes`/typography (depends on T006–T009)
-- [ ] T011 [P] Add teal-tinted `Modifier.cardShadow()` helper in `presentation/src/main/kotlin/com/daycounter/presentation/components/Elevation.kt`
+- [X] T006 [P] Replace brand palette (light + derived dark tokens) in `presentation/src/main/kotlin/com/daycounter/presentation/theme/Color.kt` per research R1/R2
+- [X] T007 [P] Create extended semantic palette + `LocalDayCounterColors` CompositionLocal in `presentation/src/main/kotlin/com/daycounter/presentation/theme/DayCounterColors.kt`
+- [X] T008 [P] Create `presentation/src/main/kotlin/com/daycounter/presentation/theme/Shape.kt` (Shapes 8/12/16/24/32 + pill helper)
+- [~] T009 Replace `Type.kt` with the brand type scale (display + tabular `HeroNumeralStyle` + body/label). **Scale done**; family swap to Outfit/Plus Jakarta Sans is a drop-in once font binaries (T001) are added — currently `FontFamily.Default` with a TODO
+- [X] T010 Update `presentation/src/main/kotlin/com/daycounter/presentation/theme/Theme.kt`: wire brand `ColorScheme`, `dynamicColor=false`, provide `LocalDayCounterColors`/`Shapes`/typography (depends on T006–T009)
+- [X] T011 [P] Add teal-tinted `Modifier.cardShadow()` helper in `presentation/src/main/kotlin/com/daycounter/presentation/components/Elevation.kt`
 
 ### Domain models & effective-streak math (blocks US2, US5)
 
-- [ ] T012 [P] Add `CounterStatus` enum in `domain/src/main/kotlin/com/daycounter/domain/model/CounterStatus.kt`
-- [ ] T013 [P] Add `PausePeriod` model in `domain/src/main/kotlin/com/daycounter/domain/model/PausePeriod.kt`
-- [ ] T014 [P] Add `AppLanguage`, `AppearanceMode`, `ReminderTime` models in `domain/src/main/kotlin/com/daycounter/domain/model/`
-- [ ] T015 Extend `Counter` with `status`, `pausedSince`, and `CATEGORIES` keys in `domain/src/main/kotlin/com/daycounter/domain/model/Counter.kt` (depends on T012)
-- [ ] T016 [P] Unit test (FAIL first) `CalculateEffectiveStreakUseCaseTest` in `domain/src/test/kotlin/com/daycounter/domain/usecase/` (same-day=0; 1 Jan→pause 10→resume 20 = 9; paused freeze across rollover; multiple pauses; pause day 0)
-- [ ] T017 Implement `CalculateEffectiveStreakUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/CalculateEffectiveStreakUseCase.kt` (depends on T015, T016)
+- [X] T012 [P] Add `CounterStatus` enum in `domain/src/main/kotlin/com/daycounter/domain/model/CounterStatus.kt`
+- [X] T013 [P] Add `PausePeriod` model in `domain/src/main/kotlin/com/daycounter/domain/model/PausePeriod.kt`
+- [X] T014 [P] Add `AppLanguage`, `AppearanceMode`, `ReminderTime` models in `domain/src/main/kotlin/com/daycounter/domain/model/`
+- [X] T015 Extend `Counter` with `status`, `pausedSince`, and `CATEGORIES` keys in `domain/src/main/kotlin/com/daycounter/domain/model/Counter.kt` (depends on T012)
+- [X] T016 [P] Unit test (FAIL first) `CalculateEffectiveStreakUseCaseTest` in `domain/src/test/kotlin/com/daycounter/domain/usecase/` (same-day=0; 1 Jan→pause 10→resume 20 = 9; paused freeze across rollover; multiple pauses; pause day 0)
+- [X] T017 Implement `CalculateEffectiveStreakUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/CalculateEffectiveStreakUseCase.kt` (depends on T015, T016)
 
 ### Room v3 schema (blocks US2, US5, US6)
 
-- [ ] T018 Add `CounterStatus` TypeConverter in `data/src/main/kotlin/com/daycounter/data/database/converter/Converters.kt`
-- [ ] T019 Extend `CounterEntity` with `status` + `paused_since` columns and update mappers in `data/src/main/kotlin/com/daycounter/data/database/entity/CounterEntity.kt` (depends on T015, T018)
-- [ ] T020 [P] Create `PausePeriodEntity` (FK→counter ON DELETE CASCADE, index on `counter_id`) + mappers in `data/src/main/kotlin/com/daycounter/data/database/entity/PausePeriodEntity.kt`
-- [ ] T021 Create `PausePeriodDao` (`insert`, `selectForCounter`, `countAll`, `sumDaysForCounter`) in `data/src/main/kotlin/com/daycounter/data/database/dao/PausePeriodDao.kt`
-- [ ] T022 Bump `AppDatabase` to `version = 3`, register `PausePeriodEntity` + `pausePeriodDao()`, keep `fallbackToDestructiveMigration(true)` in `data/src/main/kotlin/com/daycounter/data/database/AppDatabase.kt` (depends on T019–T021)
-- [ ] T023 [P] Integration test (FAIL first) `PausePeriodDaoTest` in `data/src/test/kotlin/com/daycounter/data/database/` (insert/select/sum; CASCADE delete with counter)
+- [X] T018 Add `CounterStatus` TypeConverter in `data/src/main/kotlin/com/daycounter/data/database/converter/Converters.kt`
+- [X] T019 Extend `CounterEntity` with `status` + `paused_since` columns and update mappers in `data/src/main/kotlin/com/daycounter/data/database/entity/CounterEntity.kt` (depends on T015, T018)
+- [X] T020 [P] Create `PausePeriodEntity` (FK→counter ON DELETE CASCADE, index on `counter_id`) + mappers in `data/src/main/kotlin/com/daycounter/data/database/entity/PausePeriodEntity.kt`
+- [X] T021 Create `PausePeriodDao` (`insert`, `selectForCounter`, `selectAll`, cascade-delete) in `data/src/main/kotlin/com/daycounter/data/database/dao/PausePeriodDao.kt`
+- [X] T022 Bump `AppDatabase` to `version = 3`, register `PausePeriodEntity` + `pausePeriodDao()`, keep `fallbackToDestructiveMigration(true)` in `data/src/main/kotlin/com/daycounter/data/database/AppDatabase.kt` (depends on T019–T021)
+- [X] T023 [P] Integration test `PausePeriodDaoTest` in `data/src/test/kotlin/com/daycounter/data/database/` (insert/select/days; CASCADE delete; status round-trip)
 
 ### Shared preferences (blocks US3, US4, US7)
 
-- [ ] T024 [P] Add `SettingsRepository` interface (language, appearance, dailyReminderEnabled, reminderTime flows + setters) in `domain/src/main/kotlin/com/daycounter/domain/repository/SettingsRepository.kt`
-- [ ] T025 Create `SettingsPreferencesDataStore` (`settings_prefs`: language/appearance/daily_reminder_enabled/daily_reminder_time) in `data/src/main/kotlin/com/daycounter/data/datastore/SettingsPreferencesDataStore.kt`
-- [ ] T026 Implement `SettingsRepositoryImpl` + Hilt binding in `data/src/main/kotlin/com/daycounter/data/repository/SettingsRepositoryImpl.kt` and `data/src/main/kotlin/com/daycounter/data/di/DataModule.kt` (depends on T024, T025)
-- [ ] T027 [P] Integration test (FAIL first) `SettingsPreferencesDataStoreTest` in `data/src/test/kotlin/com/daycounter/data/datastore/` (defaults: en/system/false/09:00; round-trip)
+- [X] T024 [P] Add `SettingsRepository` interface (language, appearance, dailyReminderEnabled, reminderTime flows + setters) in `domain/src/main/kotlin/com/daycounter/domain/repository/SettingsRepository.kt`
+- [X] T025 Create `SettingsPreferencesDataStore` (`settings_prefs`: language/appearance/daily_reminder_enabled/daily_reminder_time) in `data/src/main/kotlin/com/daycounter/data/datastore/SettingsPreferencesDataStore.kt`
+- [X] T026 Implement `SettingsRepositoryImpl` + Hilt binding in `data/src/main/kotlin/com/daycounter/data/repository/SettingsRepositoryImpl.kt` and `data/src/main/kotlin/com/daycounter/data/di/DataModule.kt` (depends on T024, T025)
+- [X] T027 [P] Integration test `SettingsPreferencesDataStoreTest` in `data/src/test/kotlin/com/daycounter/data/datastore/` (defaults: en/system/false/09:00; round-trip)
 
 ### Shared repository surface
 
-- [ ] T028 [P] Add `PausePeriodRepository` interface in `domain/.../repository/PausePeriodRepository.kt` and impl + DI in `data/.../repository/PausePeriodRepositoryImpl.kt`
-- [ ] T029 Extend `CounterRepository` interface with `pause`, `resume`, `eraseAll`, `restore` signatures in `domain/src/main/kotlin/com/daycounter/domain/repository/CounterRepository.kt`
+- [X] T028 [P] Add `PausePeriodRepository` interface in `domain/.../repository/PausePeriodRepository.kt` and impl + DI in `data/.../repository/PausePeriodRepositoryImpl.kt`
+- [~] T029 Extend `CounterRepository` interface — **pause/resume added** (interface + `CounterDao` `@Transaction` + impl, i.e. US2 data tasks T052/T053 done early); `eraseAll`/`restore` land in US6 (T091/T092)
 
 **Checkpoint**: Theme, schema, effective-streak math, and preferences are ready — user stories can begin.
 
@@ -111,6 +111,8 @@ prior actions still work; TalkBack pass.
 - [ ] T043 [P] [US1] Reskin Glance widget to brand tokens in `presentation/src/main/kotlin/com/daycounter/presentation/widget/DayCounterWidget.kt`
 - [ ] T044 [US1] Add share strings + new copy to `presentation/src/main/res/values/strings.xml` and `values-es/strings.xml` (no hardcoded literals)
 - [ ] T045 [US1] Accessibility pass: TalkBack labels + non-color state cues across reskinned screens; verify 48dp targets
+- [ ] T108 [US1] Verify adaptive layout across compact/medium/expanded window size classes on reskinned + new screens; add a Compose test exercising one compact and one expanded width in `presentation/src/test/kotlin/com/daycounter/presentation/layout/AdaptiveLayoutTest.kt` (Principle I + pre-merge checklist) — addresses C2
+- [ ] T110 [US1] Implement the three widget layouts per FR-006b (featured-streak banner; single-counter with a 7-bar mini-week; multi-counter list) in `presentation/src/main/kotlin/com/daycounter/presentation/widget/DayCounterWidget.kt` + `DayCounterWidgetState.kt` — addresses G1
 
 **Checkpoint**: App fully re-skinned, light/dark, no regression. MVP demoable.
 
@@ -135,8 +137,8 @@ no milestone while paused; history unchanged; survives restart.
 
 - [ ] T050 [P] [US2] Implement `PauseCounterUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/PauseCounterUseCase.kt`
 - [ ] T051 [P] [US2] Implement `ResumeCounterUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/ResumeCounterUseCase.kt`
-- [ ] T052 [US2] Add `pauseCounter`/`resumeCounter` `@Transaction` to `data/src/main/kotlin/com/daycounter/data/database/dao/CounterDao.kt`
-- [ ] T053 [US2] Implement pause/resume in `data/src/main/kotlin/com/daycounter/data/repository/CounterRepositoryImpl.kt` (depends on T052)
+- [X] T052 [US2] Add `pause`/`resume` `@Transaction` to `data/src/main/kotlin/com/daycounter/data/database/dao/CounterDao.kt` (done in Phase 2 shared surface)
+- [X] T053 [US2] Implement pause/resume in `data/src/main/kotlin/com/daycounter/data/repository/CounterRepositoryImpl.kt` (done in Phase 2 shared surface)
 - [ ] T054 [US2] Wire pause/resume + paused state into `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
 - [ ] T055 [US2] Detail UI: dashed/muted paused ring, "En pausa" numeral label, banner, "Reanudar/Pausar" primary in `CounterDetailScreen.kt` + `ProgressRing.kt` `paused` param
 - [ ] T056 [US2] Home filter chips (Todos/Activos/Pausados + live counts + empty states) in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeViewModel.kt` and `HomeScreen.kt`
@@ -169,6 +171,7 @@ fallback.
 - [ ] T066 [US3] Idioma sheet UI (native names, radio + check) wired to `SettingsViewModel` in `presentation/src/main/kotlin/com/daycounter/presentation/settings/` (depends on T065)
 - [ ] T067 [US3] Add `language`/`appearance` state + `SelectLanguage` event (persist → emit `LanguageChanged`) in `SettingsViewModel.kt`
 - [ ] T068 [US3] Idioma strings to `values/strings.xml` + `values-es/strings.xml`
+- [ ] T111 [US3] Ensure dates/numbers format per the selected language (java.time formatters bound to the active Locale; no hardcoded patterns); test in `presentation/src/test/kotlin/com/daycounter/presentation/locale/FormattingLocaleTest.kt` (FR-019) — addresses G2
 
 **Checkpoint**: Language switching works and persists.
 
@@ -192,7 +195,8 @@ milestone notifications.
 - [ ] T072 [US4] Add `daily_reminder` NotificationChannel in `app/src/main/kotlin/com/daycounter/DayCounterApplication.kt`
 - [ ] T073 [P] [US4] Implement `DailyReminderWorker` (post + re-enqueue +24h, honor toggle/permission) in `data/src/main/kotlin/com/daycounter/data/work/DailyReminderWorker.kt`
 - [ ] T074 [US4] Implement `DailyReminderScheduler` (enqueue unique / cancel, next-occurrence delay) in `data/src/main/kotlin/com/daycounter/data/work/DailyReminderScheduler.kt`
-- [ ] T075 [US4] Re-arm reminder on app start (and boot) from `SettingsRepository` in `DayCounterApplication.kt` (depends on T074)
+- [ ] T075 [US4] Re-arm reminder on app start from `SettingsRepository` in `DayCounterApplication.kt` (depends on T074)
+- [ ] T109 [US4] Add a `BOOT_COMPLETED` BroadcastReceiver (`android:exported="true"`, `RECEIVE_BOOT_COMPLETED` permission) that re-arms the daily reminder via `DailyReminderScheduler`; declare it explicitly in `app/src/main/AndroidManifest.xml` (Principle VI exported handling) — addresses I1/SC-005
 - [ ] T076 [P] [US4] Create `TimePickerWheel` component (scrollable hour/min + presets) in `presentation/src/main/kotlin/com/daycounter/presentation/components/TimePickerWheel.kt`
 - [ ] T077 [US4] Add `ReminderTimeSheet` NavKey + entry; settings rows for "Recordatorios diarios" toggle + "Hora del recordatorio" in `SettingsScreen.kt`/`SettingsViewModel.kt` (depends on T076)
 - [ ] T078 [P] [US4] Implement approaching-milestone evaluation in `data/src/main/kotlin/com/daycounter/data/work/DailyUpdateWorker.kt` (active-only, dedup, toggle-gated) — FR-025b
@@ -283,6 +287,7 @@ applied.
 - [ ] T104 Commit the Room v3 exported schema JSON under `data/schemas/`
 - [ ] T105 [P] Run `quickstart.md` manual verification (SC-001…SC-010), including TalkBack + dark-mode passes
 - [x] T106 Resolve the dynamic-color Constitution deviation — **DONE**: Principle I amended to v2.3.0 (2026-05-29), dynamic color conditional under a defined brand design system
+- [ ] T107 Regenerate the Baseline Profile (Macrobenchmark) covering the new user flows (pause/resume, settings sheets — Idioma/Hora/Borrar todo, stats) and ship it with the release AAB; review startup/frame results before release (constitution Technical Standards) — addresses C1
 
 ---
 
@@ -342,4 +347,5 @@ US1 (theme) → US2 (pause) → US3 (language) → US4 (reminder) → US5 (stats
 - No hardcoded strings/colors; all from theme + `strings.xml`/`values-es`.
 - `java.time` with explicit `ZoneId` for all date math.
 - Commit per task or logical group, referencing the task ID (constitution workflow).
-- **Before merge**: settle the dynamic-color Constitution deviation (T106).
+- **Before merge**: T106 dynamic-color amendment is done (v2.3.0); ensure T107 (Baseline Profile),
+  T108 (adaptive layout), and T103 (AAB ≤ 10 MB) are complete.

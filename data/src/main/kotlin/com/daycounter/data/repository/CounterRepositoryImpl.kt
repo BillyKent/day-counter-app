@@ -32,4 +32,8 @@ class CounterRepositoryImpl @Inject constructor(
         today: LocalDate,
         now: Instant,
     ) = dao.archiveAndReset(counterId, streakDaysAtReset, today, now)
+
+    override suspend fun pause(counterId: Long, today: LocalDate) = dao.pause(counterId, today)
+
+    override suspend fun resume(counterId: Long, today: LocalDate) = dao.resume(counterId, today)
 }
