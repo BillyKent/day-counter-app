@@ -115,6 +115,16 @@
     <string name="stats_days">%1$d days</string>
     <string name="stats_empty_title">No statistics yet</string>
     <string name="stats_empty_body">Create a counter to start seeing your progress here.</string>
+    <string name="stats_milestones">Milestones</string>
+    <string name="stats_milestones_value">%1$d reached</string>
+    <string name="stats_avg_streak">Average streak</string>
+    <string name="stats_pauses">Pauses</string>
+    <string name="stats_paused_now">paused now</string>
+    <string name="stats_paused_days">days paused</string>
+    <string name="stats_total_pauses">total pauses</string>
+    <string name="stats_pauses_note">Time on pause never subtracts days — it simply doesn\'t add.</string>
+    <string name="stats_this_week">This week</string>
+    <string name="stats_week_completed">%1$d days completed</string>
 
     <!-- History / calendar -->
     <string name="history_title">History</string>

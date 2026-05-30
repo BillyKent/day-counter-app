@@ -12,7 +12,7 @@ class GetStatsSummaryUseCaseTest {
 
     private val zone = ZoneOffset.UTC
     private val clock = Clock.fixed(Instant.parse("2026-05-29T00:00:00Z"), zone)
-    private val sut = GetStatsSummaryUseCase(CalculateStreakUseCase(clock, zone))
+    private val sut = GetStatsSummaryUseCase(CalculateEffectiveStreakUseCase(clock, zone))
 
     private fun counter(id: Long, daysAgo: Long) = Counter(
         id = id,
@@ -36,6 +36,21 @@ class GetStatsSummaryUseCaseTest {
         assertEquals(155, summary.totalAccumulated)
         assertEquals(120, summary.bestStreak)
         assertEquals(3, summary.activeCounters)
+        // milestones reached: 5→{1}=1, 30→{1,7,30}=3, 120→{1,7,30,100}=4 ⇒ 8
+        assertEquals(8, summary.milestonesReached)
+        // average 155/3 ≈ 52
+        assertEquals(52, summary.averageStreak)
+    }
+
+    @Test
+    fun `paused counters are excluded from active count`() {
+        val active = counter(1, 10)
+        val paused = counter(2, 40).copy(
+            status = com.daycounter.domain.model.CounterStatus.PAUSED,
+            pausedSince = LocalDate.of(2026, 5, 29).minusDays(5),
+        )
+        val summary = sut(listOf(active, paused))
+        assertEquals(1, summary.activeCounters)
     }
 
     @Test

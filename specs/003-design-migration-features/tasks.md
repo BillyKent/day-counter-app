@@ -216,18 +216,18 @@ day totals & active count.
 
 ### Tests (write first, must FAIL)
 
-- [ ] T080 [P] [US5] Unit test `GetPauseStatsUseCaseTest` + extended `GetStatsSummaryUseCaseTest` (effective totals, active excludes paused, avg, milestones) in `domain/src/test/kotlin/com/daycounter/domain/usecase/`
-- [ ] T081 [P] [US5] Unit test `GetWeeklyActivityUseCaseTest` in `domain/src/test/kotlin/com/daycounter/domain/usecase/`
-- [ ] T082 [P] [US5] Compose test: Stats shows Pausas card + weekly bars + racha media + hitos in `presentation/src/test/kotlin/com/daycounter/presentation/stats/StatsContentTest.kt`
+- [X] T080 [P] [US5] Extended `GetStatsSummaryUseCaseTest` (effective totals, active excludes paused, avg, milestones) + `PauseStatsAndWeeklyActivityTest` (pause stats)
+- [X] T081 [P] [US5] `PauseStatsAndWeeklyActivityTest` weekly cases (active every day; paused only counts before pause)
+- [X] T082 [P] [US5] Compose test in `StatsScreenTest`: Pausas card + weekly + racha media + hitos exist
 
 ### Implementation
 
-- [ ] T083 [P] [US5] Implement `GetPauseStatsUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetPauseStatsUseCase.kt`
-- [ ] T084 [P] [US5] Implement `GetWeeklyActivityUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetWeeklyActivityUseCase.kt`
-- [ ] T085 [US5] Extend `GetStatsSummaryUseCase` (effective total, active-excl-paused, milestonesReached, avg) in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetStatsSummaryUseCase.kt`
-- [ ] T086 [P] [US5] Create `WeeklyBars` component in `presentation/src/main/kotlin/com/daycounter/presentation/components/WeeklyBars.kt`
-- [ ] T087 [US5] Wire Pausas card, weekly bars, racha media, hitos into `presentation/src/main/kotlin/com/daycounter/presentation/stats/StatsViewModel.kt` and `StatsScreen.kt` (depends on T083–T086)
-- [ ] T088 [US5] Stats strings to `values/strings.xml` + `values-es/strings.xml`
+- [X] T083 [P] [US5] Implement `GetPauseStatsUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetPauseStatsUseCase.kt`
+- [X] T084 [P] [US5] Implement `GetWeeklyActivityUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/GetWeeklyActivityUseCase.kt`
+- [X] T085 [US5] Extend `GetStatsSummaryUseCase` (effective total, active-excl-paused, milestonesReached, avg) + `StatsSummary` model
+- [X] T086 [P] [US5] Create `WeeklyBars` component in `presentation/src/main/kotlin/com/daycounter/presentation/components/WeeklyBars.kt`
+- [X] T087 [US5] Wire Pausas card, weekly bars, racha media, hitos into `StatsViewModel.kt` and `StatsScreen.kt`
+- [X] T088 [US5] Stats strings to `values/strings.xml` + `values-es/strings.xml`
 
 **Checkpoint**: Expanded Stats accurate and consistent with Contadores (SC-008).
 

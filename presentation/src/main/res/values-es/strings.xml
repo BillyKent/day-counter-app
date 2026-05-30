@@ -115,6 +115,16 @@
     <string name="stats_days">%1$d días</string>
     <string name="stats_empty_title">Aún no hay estadísticas</string>
     <string name="stats_empty_body">Crea un contador para empezar a ver tu progreso aquí.</string>
+    <string name="stats_milestones">Hitos</string>
+    <string name="stats_milestones_value">%1$d alcanzados</string>
+    <string name="stats_avg_streak">Racha media</string>
+    <string name="stats_pauses">Pausas</string>
+    <string name="stats_paused_now">en pausa ahora</string>
+    <string name="stats_paused_days">días pausados</string>
+    <string name="stats_total_pauses">pausas totales</string>
+    <string name="stats_pauses_note">El tiempo en pausa nunca resta días a tus rachas — simplemente no suma.</string>
+    <string name="stats_this_week">Esta semana</string>
+    <string name="stats_week_completed">%1$d días cumplidos</string>
 
     <!-- Historial / calendario -->
     <string name="history_title">Historial</string>
