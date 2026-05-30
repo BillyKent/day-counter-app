@@ -1,7 +1,9 @@
 package com.daycounter.di
 
+import com.daycounter.data.work.DailyReminderNotifier
 import com.daycounter.data.work.MilestoneNotifier
 import com.daycounter.data.work.WidgetRefresher
+import com.daycounter.notifications.AndroidDailyReminderNotifier
 import com.daycounter.notifications.AndroidMilestoneNotifier
 import com.daycounter.widgets.WidgetRefresherImpl
 import dagger.Binds
@@ -21,4 +23,8 @@ abstract class AppBindingsModule {
     @Binds
     @Singleton
     abstract fun bindWidgetRefresher(impl: WidgetRefresherImpl): WidgetRefresher
+
+    @Binds
+    @Singleton
+    abstract fun bindDailyReminderNotifier(impl: AndroidDailyReminderNotifier): DailyReminderNotifier
 }

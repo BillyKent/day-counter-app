@@ -8,6 +8,12 @@
     <string name="notification_milestone_title">%1$s — hito de %2$d días</string>
     <string name="notification_milestone_text">¡Llegaste a %1$d días! Sigue así.</string>
 
+    <!-- Recordatorio diario -->
+    <string name="notification_channel_daily_reminder">Recordatorios diarios</string>
+    <string name="notification_channel_daily_reminder_description">Un aviso diario para mantener tus rachas.</string>
+    <string name="notification_daily_reminder_title">Buenos días</string>
+    <string name="notification_daily_reminder_text">Tus %1$d contadores siguen activos. Un día más.</string>
+
     <!-- Widget -->
     <string name="widget_label">Contador de Días</string>
     <string name="widget_days_label">días</string>
@@ -144,6 +150,17 @@
     <string name="settings_title">Ajustes</string>
     <string name="settings_notifications">Notificaciones de hitos</string>
     <string name="settings_notifications_description">Recibe una notificación cuando un contador alcanza un hito.</string>
+    <string name="settings_daily_reminder">Recordatorios diarios</string>
+    <string name="settings_daily_reminder_description">Te avisamos cada día para mantener tu racha.</string>
+    <string name="settings_reminder_time">Hora del recordatorio</string>
+    <string name="settings_reminder_time_off">Recordatorio desactivado</string>
+    <string name="reminder_sheet_title">Hora del recordatorio</string>
+    <string name="reminder_preset_morning">Mañana</string>
+    <string name="reminder_preset_midday">Mediodía</string>
+    <string name="reminder_preset_evening">Noche</string>
+    <string name="reminder_save">Guardar hora</string>
+    <string name="reminder_decrease">Disminuir</string>
+    <string name="reminder_increase">Aumentar</string>
     <string name="settings_appearance_header">Apariencia</string>
     <string name="settings_dark_mode">Modo oscuro</string>
     <string name="settings_appearance_system">Sistema</string>

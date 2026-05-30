@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
@@ -30,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +50,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.LaunchedEffect
 import com.daycounter.domain.model.AppLanguage
 import com.daycounter.domain.model.AppearanceMode
+import com.daycounter.domain.model.ReminderTime
 import com.daycounter.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +62,8 @@ fun SettingsScreen(
     val language by viewModel.language.collectAsStateWithLifecycle()
     val appearance by viewModel.appearance.collectAsStateWithLifecycle()
     val counterCount by viewModel.counterCount.collectAsStateWithLifecycle()
+    val dailyReminderEnabled by viewModel.dailyReminderEnabled.collectAsStateWithLifecycle()
+    val reminderTime by viewModel.reminderTime.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     // Recreate the activity once a language change is persisted so the new locale takes effect (US3).
@@ -66,6 +73,7 @@ fun SettingsScreen(
 
     var languageSheetOpen by remember { mutableStateOf(false) }
     var eraseSheetOpen by remember { mutableStateOf(false) }
+    var timeSheetOpen by remember { mutableStateOf(false) }
 
     val snackbarHost = remember { SnackbarHostState() }
     val erasedMessage = stringResource(R.string.settings_erased_toast)
@@ -110,6 +118,44 @@ fun SettingsScreen(
                         .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
                         .semantics { contentDescription = "Toggle milestone notifications" }
                         .testTag("settings_notifications_switch"),
+                )
+            }
+
+            // Daily reminder toggle (US4).
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(stringResource(R.string.settings_daily_reminder), style = MaterialTheme.typography.titleLarge)
+                    Text(stringResource(R.string.settings_daily_reminder_description), style = MaterialTheme.typography.bodyLarge)
+                }
+                Switch(
+                    checked = dailyReminderEnabled,
+                    onCheckedChange = { viewModel.setDailyReminderEnabled(it) },
+                    modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).testTag("settings_reminder_switch"),
+                )
+            }
+            // Reminder time row (active only when the reminder is on).
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .sizeIn(minHeight = 48.dp)
+                    .clickable(enabled = dailyReminderEnabled) { timeSheetOpen = true }
+                    .padding(vertical = 8.dp)
+                    .testTag("settings_reminder_time_row"),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_reminder_time),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f),
+                    color = if (dailyReminderEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = if (dailyReminderEnabled) reminderTime.serialize() else stringResource(R.string.settings_reminder_time_off),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (dailyReminderEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -259,7 +305,93 @@ fun SettingsScreen(
                 }
             }
         }
+
+        if (timeSheetOpen) {
+            ReminderTimeSheet(
+                initial = reminderTime,
+                onDismiss = { timeSheetOpen = false },
+                onSave = {
+                    viewModel.setReminderTime(it)
+                    timeSheetOpen = false
+                },
+            )
+        }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReminderTimeSheet(
+    initial: ReminderTime,
+    onDismiss: () -> Unit,
+    onSave: (ReminderTime) -> Unit,
+) {
+    var hour by remember { mutableIntStateOf(initial.hour) }
+    var minute by remember { mutableIntStateOf(initial.minute) }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(),
+        modifier = Modifier.testTag("reminder_time_sheet"),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(stringResource(R.string.reminder_sheet_title), style = MaterialTheme.typography.titleLarge)
+
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Stepper(
+                    value = "%02d".format(hour),
+                    onDecrease = { hour = (hour + 23) % 24 },
+                    onIncrease = { hour = (hour + 1) % 24 },
+                    tag = "reminder_hour",
+                )
+                Text(":", style = MaterialTheme.typography.displaySmall)
+                Stepper(
+                    value = "%02d".format(minute),
+                    onDecrease = { minute = (minute + 60 - ReminderTime.MINUTE_STEP) % 60 },
+                    onIncrease = { minute = (minute + ReminderTime.MINUTE_STEP) % 60 },
+                    tag = "reminder_minute",
+                )
+            }
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                PresetChip(ReminderTime.MORNING, R.string.reminder_preset_morning) { hour = it.hour; minute = it.minute }
+                PresetChip(ReminderTime.MIDDAY, R.string.reminder_preset_midday) { hour = it.hour; minute = it.minute }
+                PresetChip(ReminderTime.EVENING, R.string.reminder_preset_evening) { hour = it.hour; minute = it.minute }
+            }
+
+            Button(
+                onClick = { onSave(ReminderTime(hour, minute)) },
+                modifier = Modifier.fillMaxWidth().testTag("reminder_save"),
+            ) { Text(stringResource(R.string.reminder_save)) }
+        }
+    }
+}
+
+@Composable
+private fun Stepper(value: String, onDecrease: () -> Unit, onIncrease: () -> Unit, tag: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        IconButton(onClick = onDecrease, modifier = Modifier.testTag("${tag}_dec")) {
+            Icon(Icons.Filled.Remove, contentDescription = stringResource(R.string.reminder_decrease))
+        }
+        Text(value, style = MaterialTheme.typography.displaySmall, modifier = Modifier.testTag(tag))
+        IconButton(onClick = onIncrease, modifier = Modifier.testTag("${tag}_inc")) {
+            Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.reminder_increase))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PresetChip(time: ReminderTime, labelRes: Int, onClick: (ReminderTime) -> Unit) {
+    FilterChip(
+        selected = false,
+        onClick = { onClick(time) },
+        label = { Text("${stringResource(labelRes)} ${time.serialize()}") },
+    )
 }
 
 @Composable

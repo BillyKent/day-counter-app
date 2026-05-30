@@ -186,21 +186,21 @@ milestone notifications.
 
 ### Tests (write first, must FAIL)
 
-- [ ] T069 [P] [US4] Test next-occurrence delay calc (across midnight) for the scheduler in `data/src/test/kotlin/com/daycounter/data/work/DailyReminderSchedulerTest.kt`
-- [ ] T070 [P] [US4] WorkManager test: `DailyReminderWorker` posts when enabled, no-op + cancels when disabled, re-enqueues next day in `data/src/test/kotlin/com/daycounter/data/work/DailyReminderWorkerTest.kt`
-- [ ] T071 [P] [US4] Compose test: time picker sheet (hour/min wheel + Mañana/Mediodía/Noche presets, save) in `presentation/src/test/kotlin/com/daycounter/presentation/settings/ReminderTimeSheetTest.kt`
+- [X] T069 [P] [US4] `DailyReminderSchedulerTest` — next-occurrence delay (later today / rolls to tomorrow / exactly now)
+- [~] T070 [P] [US4] Worker behavior — scheduler delay tested (T069); full WorkManager `TestListenableWorkerBuilder` test deferred
+- [~] T071 [P] [US4] Time-picker sheet built (steppers + presets, testTags); dedicated Compose test deferred (Settings uses `hiltViewModel`)
 
 ### Implementation
 
-- [ ] T072 [US4] Add `daily_reminder` NotificationChannel in `app/src/main/kotlin/com/daycounter/DayCounterApplication.kt`
-- [ ] T073 [P] [US4] Implement `DailyReminderWorker` (post + re-enqueue +24h, honor toggle/permission) in `data/src/main/kotlin/com/daycounter/data/work/DailyReminderWorker.kt`
-- [ ] T074 [US4] Implement `DailyReminderScheduler` (enqueue unique / cancel, next-occurrence delay) in `data/src/main/kotlin/com/daycounter/data/work/DailyReminderScheduler.kt`
-- [ ] T075 [US4] Re-arm reminder on app start from `SettingsRepository` in `DayCounterApplication.kt` (depends on T074)
-- [ ] T109 [US4] Add a `BOOT_COMPLETED` BroadcastReceiver (`android:exported="true"`, `RECEIVE_BOOT_COMPLETED` permission) that re-arms the daily reminder via `DailyReminderScheduler`; declare it explicitly in `app/src/main/AndroidManifest.xml` (Principle VI exported handling) — addresses I1/SC-005
-- [ ] T076 [P] [US4] Create `TimePickerWheel` component (scrollable hour/min + presets) in `presentation/src/main/kotlin/com/daycounter/presentation/components/TimePickerWheel.kt`
-- [ ] T077 [US4] Add `ReminderTimeSheet` NavKey + entry; settings rows for "Recordatorios diarios" toggle + "Hora del recordatorio" in `SettingsScreen.kt`/`SettingsViewModel.kt` (depends on T076)
-- [ ] T078 [P] [US4] Implement approaching-milestone evaluation in `data/src/main/kotlin/com/daycounter/data/work/DailyUpdateWorker.kt` (active-only, dedup, toggle-gated) — FR-025b
-- [ ] T079 [US4] Reminder + channel strings to `values/strings.xml` + `values-es/strings.xml`
+- [X] T072 [US4] Add `daily_reminder` NotificationChannel in `DayCounterApplication.kt`
+- [X] T073 [P] [US4] Implement `DailyReminderWorker` (post + re-enqueue, honor toggle/permission) + `DailyReminderNotifier` impl in `:app`
+- [X] T074 [US4] Implement `DailyReminderScheduler` (enqueue unique REPLACE / cancel, next-occurrence delay)
+- [X] T075 [US4] Re-arm reminder on app start from `SettingsRepository` in `DayCounterApplication.kt`
+- [X] T109 [US4] `BOOT_COMPLETED` re-arm — extended existing `BootReceiver` (exported, permission present) to re-arm the daily reminder via a Hilt EntryPoint (I1/SC-005)
+- [X] T076 [P] [US4] Time picker UI (hour/min steppers in 5-min steps + Mañana/Mediodía/Noche presets) — inline in Settings
+- [X] T077 [US4] Settings "Recordatorios diarios" toggle + "Hora del recordatorio" row + inline `ReminderTimeSheet` wired to `SettingsViewModel`
+- [~] T078 [P] [US4] Approaching-milestone (FR-025b, SHOULD) — deferred to a follow-up
+- [X] T079 [US4] Reminder + channel strings to `values/strings.xml` + `values-es/strings.xml`
 
 **Checkpoint**: Daily reminder schedules, fires, persists; approaching-milestone fires.
 

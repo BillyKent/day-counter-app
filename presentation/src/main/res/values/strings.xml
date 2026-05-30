@@ -8,6 +8,12 @@
     <string name="notification_milestone_title">%1$s — %2$d-day milestone</string>
     <string name="notification_milestone_text">You\'ve reached %1$d days! Keep going.</string>
 
+    <!-- Daily reminder -->
+    <string name="notification_channel_daily_reminder">Daily reminders</string>
+    <string name="notification_channel_daily_reminder_description">A gentle daily nudge to keep your streaks going.</string>
+    <string name="notification_daily_reminder_title">Good morning</string>
+    <string name="notification_daily_reminder_text">Your %1$d counters are still going. One more day.</string>
+
     <!-- Widget -->
     <string name="widget_label">Day Counter</string>
     <string name="widget_days_label">days</string>
@@ -144,6 +150,17 @@
     <string name="settings_title">Settings</string>
     <string name="settings_notifications">Milestone notifications</string>
     <string name="settings_notifications_description">Receive a notification when a counter hits a milestone.</string>
+    <string name="settings_daily_reminder">Daily reminders</string>
+    <string name="settings_daily_reminder_description">We\'ll nudge you each day to keep your streak.</string>
+    <string name="settings_reminder_time">Reminder time</string>
+    <string name="settings_reminder_time_off">Reminder off</string>
+    <string name="reminder_sheet_title">Reminder time</string>
+    <string name="reminder_preset_morning">Morning</string>
+    <string name="reminder_preset_midday">Midday</string>
+    <string name="reminder_preset_evening">Evening</string>
+    <string name="reminder_save">Save time</string>
+    <string name="reminder_decrease">Decrease</string>
+    <string name="reminder_increase">Increase</string>
     <string name="settings_appearance_header">Appearance</string>
     <string name="settings_dark_mode">Dark mode</string>
     <string name="settings_appearance_system">System</string>
