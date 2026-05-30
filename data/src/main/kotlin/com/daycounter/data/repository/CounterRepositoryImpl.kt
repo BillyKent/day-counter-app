@@ -4,6 +4,7 @@ import com.daycounter.data.database.dao.CounterDao
 import com.daycounter.data.database.entity.toDomain
 import com.daycounter.data.database.entity.toEntity
 import com.daycounter.domain.model.Counter
+import com.daycounter.domain.model.DataSnapshot
 import com.daycounter.domain.repository.CounterRepository
 import java.time.Instant
 import java.time.LocalDate
@@ -36,4 +37,24 @@ class CounterRepositoryImpl @Inject constructor(
     override suspend fun pause(counterId: Long, today: LocalDate) = dao.pause(counterId, today)
 
     override suspend fun resume(counterId: Long, today: LocalDate) = dao.resume(counterId, today)
+
+    override suspend fun eraseAll(): DataSnapshot {
+        val snapshot = DataSnapshot(
+            counters = dao.selectAllCounters().map { it.toDomain() },
+            pausePeriods = dao.selectAllPausePeriods().map { it.toDomain() },
+            milestones = dao.selectAllMilestones().map { it.toDomain() },
+            pastStreaks = dao.selectAllPastStreaks().map { it.toDomain() },
+        )
+        dao.deleteAllCounters()
+        return snapshot
+    }
+
+    override suspend fun restore(snapshot: DataSnapshot) {
+        dao.restoreAll(
+            counters = snapshot.counters.map { it.toEntity() },
+            pausePeriods = snapshot.pausePeriods.map { it.toEntity() },
+            milestones = snapshot.milestones.map { it.toEntity() },
+            pastStreaks = snapshot.pastStreaks.map { it.toEntity() },
+        )
+    }
 }

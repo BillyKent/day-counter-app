@@ -11,12 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,6 +56,7 @@ fun SettingsScreen(
     val enabled by viewModel.notificationsEnabled.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
     val appearance by viewModel.appearance.collectAsStateWithLifecycle()
+    val counterCount by viewModel.counterCount.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     // Recreate the activity once a language change is persisted so the new locale takes effect (US3).
@@ -57,11 +65,28 @@ fun SettingsScreen(
     }
 
     var languageSheetOpen by remember { mutableStateOf(false) }
+    var eraseSheetOpen by remember { mutableStateOf(false) }
+
+    val snackbarHost = remember { SnackbarHostState() }
+    val erasedMessage = stringResource(R.string.settings_erased_toast)
+    val undoLabel = stringResource(R.string.settings_undo)
+    // Show the undo snackbar once an erase completes (FR-031).
+    LaunchedEffect(Unit) {
+        viewModel.eraseUndoAvailable.collect {
+            val result = snackbarHost.showSnackbar(
+                message = erasedMessage,
+                actionLabel = undoLabel,
+                duration = SnackbarDuration.Long,
+            )
+            if (result == SnackbarResult.ActionPerformed) viewModel.undoErase()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.settings_title)) })
         },
+        snackbarHost = { SnackbarHost(snackbarHost) },
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             Row(
@@ -139,6 +164,35 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
+
+            // Data section (US6).
+            Text(
+                text = stringResource(R.string.settings_data_header),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .sizeIn(minHeight = 48.dp)
+                    .clickable { eraseSheetOpen = true }
+                    .padding(vertical = 8.dp)
+                    .testTag("settings_erase_row"),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.settings_erase_all),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_erase_all_description),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
         }
 
         if (languageSheetOpen) {
@@ -162,6 +216,45 @@ fun SettingsScreen(
                                 languageSheetOpen = false
                             },
                         )
+                    }
+                }
+            }
+        }
+
+        if (eraseSheetOpen) {
+            ModalBottomSheet(
+                onDismissRequest = { eraseSheetOpen = false },
+                sheetState = rememberModalBottomSheetState(),
+                modifier = Modifier.testTag("erase_sheet"),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_erase_confirm_title),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_erase_confirm_message, counterCount),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        OutlinedButton(
+                            onClick = { eraseSheetOpen = false },
+                            modifier = Modifier.weight(1f),
+                        ) { Text(stringResource(R.string.settings_erase_cancel)) }
+                        Button(
+                            onClick = {
+                                eraseSheetOpen = false
+                                viewModel.eraseAll()
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError,
+                            ),
+                            modifier = Modifier.weight(1f).testTag("erase_confirm"),
+                        ) { Text(stringResource(R.string.settings_erase_confirm_cta)) }
                     }
                 }
             }

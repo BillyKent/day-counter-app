@@ -8,7 +8,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.daycounter.data.database.entity.CounterEntity
+import com.daycounter.data.database.entity.MilestoneRecordEntity
 import com.daycounter.data.database.entity.PastStreakRecordEntity
+import com.daycounter.data.database.entity.PausePeriodEntity
 import com.daycounter.domain.model.PastStreakRecord
 import java.time.Instant
 import java.time.LocalDate
@@ -105,5 +107,49 @@ interface CounterDao {
         val since = pausedSince(counterId) ?: return
         insertPausePeriod(counterId, since, today)
         setActive(counterId)
+    }
+
+    // ---- Erase-all + restore (FR-030/FR-031) ----
+
+    @Query("SELECT * FROM counters")
+    suspend fun selectAllCounters(): List<CounterEntity>
+
+    @Query("SELECT * FROM pause_periods")
+    suspend fun selectAllPausePeriods(): List<PausePeriodEntity>
+
+    @Query("SELECT * FROM milestone_records")
+    suspend fun selectAllMilestones(): List<MilestoneRecordEntity>
+
+    @Query("SELECT * FROM past_streak_records")
+    suspend fun selectAllPastStreaks(): List<PastStreakRecordEntity>
+
+    /** Deleting all counters cascades to pause periods, milestones, and past streaks (FK CASCADE). */
+    @Query("DELETE FROM counters")
+    suspend fun deleteAllCounters()
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertCounters(counters: List<CounterEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertPausePeriods(periods: List<PausePeriodEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertMilestones(records: List<MilestoneRecordEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertPastStreaks(records: List<PastStreakRecordEntity>)
+
+    /** Re-inserts a snapshot in FK order (counters first), all-or-nothing. */
+    @Transaction
+    suspend fun restoreAll(
+        counters: List<CounterEntity>,
+        pausePeriods: List<PausePeriodEntity>,
+        milestones: List<MilestoneRecordEntity>,
+        pastStreaks: List<PastStreakRecordEntity>,
+    ) {
+        insertCounters(counters)
+        insertPausePeriods(pausePeriods)
+        insertMilestones(milestones)
+        insertPastStreaks(pastStreaks)
     }
 }

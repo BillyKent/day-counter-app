@@ -156,5 +156,14 @@
     <string name="language_name_es">Español</string>
     <string name="language_label_en">Inglés</string>
     <string name="language_label_es">Español</string>
+    <string name="settings_data_header">Datos</string>
+    <string name="settings_erase_all">Borrar todo</string>
+    <string name="settings_erase_all_description">Eliminar contadores y reiniciar la app</string>
+    <string name="settings_erase_confirm_title">¿Borrar todo?</string>
+    <string name="settings_erase_confirm_message">Se eliminarán tus %1$d contadores y todo su historial.</string>
+    <string name="settings_erase_confirm_cta">Borrar todo</string>
+    <string name="settings_erase_cancel">Cancelar</string>
+    <string name="settings_erased_toast">Todos los datos fueron eliminados.</string>
+    <string name="settings_undo">Deshacer</string>
     <string name="back">Atrás</string>
 </resources>

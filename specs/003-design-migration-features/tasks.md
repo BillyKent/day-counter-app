@@ -76,7 +76,7 @@ stories depend on. **⚠️ No user story work begins until this phase is comple
 ### Shared repository surface
 
 - [X] T028 [P] Add `PausePeriodRepository` interface in `domain/.../repository/PausePeriodRepository.kt` and impl + DI in `data/.../repository/PausePeriodRepositoryImpl.kt`
-- [~] T029 Extend `CounterRepository` interface — **pause/resume added** (interface + `CounterDao` `@Transaction` + impl, i.e. US2 data tasks T052/T053 done early); `eraseAll`/`restore` land in US6 (T091/T092)
+- [X] T029 Extend `CounterRepository` interface — pause/resume **and** eraseAll/restore added (interface + `CounterDao` `@Transaction` + impl); completed with US6
 
 **Checkpoint**: Theme, schema, effective-streak math, and preferences are ready — user stories can begin.
 
@@ -242,16 +242,16 @@ cancel changes nothing.
 
 ### Tests (write first, must FAIL)
 
-- [ ] T089 [P] [US6] Unit/integration test `EraseAllDataUseCaseTest` + restore round-trip in `domain/src/test/...` and `data/src/test/...`
-- [ ] T090 [P] [US6] Compose test: confirm sheet + undo toast restores; dismiss makes permanent in `presentation/src/test/kotlin/com/daycounter/presentation/settings/EraseAllTest.kt`
+- [X] T089 [P] [US6] Integration test `EraseAllRestoreTest` — snapshot-then-clear, then restore round-trip (same ids) in `data/src/test/.../repository/`
+- [~] T090 [P] [US6] Compose test for confirm sheet/undo — deferred (Settings uses `hiltViewModel`; needs a stateless `SettingsContent`). Round-trip covered by T089.
 
 ### Implementation
 
-- [ ] T091 [US6] Add `eraseAll()` (snapshot+delete) + `restore(snapshot)` `@Transaction` to `CounterDao.kt`
-- [ ] T092 [US6] Implement erase/restore in `CounterRepositoryImpl.kt` (depends on T091, T029)
-- [ ] T093 [P] [US6] Implement `EraseAllDataUseCase` + `RestoreAllDataUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/`
-- [ ] T094 [US6] Add `EraseAllSheet` NavKey + entry; confirm sheet + undo toast/snackbar (bounded window) in `SettingsScreen.kt`/`SettingsViewModel.kt` (depends on T093)
-- [ ] T095 [US6] Erase/undo strings to `values/strings.xml` + `values-es/strings.xml`
+- [X] T091 [US6] Add snapshot selects + `deleteAllCounters()` (cascade) + `restoreAll()` `@Transaction` to `CounterDao.kt`
+- [X] T092 [US6] Implement erase/restore in `CounterRepositoryImpl.kt`
+- [X] T093 [P] [US6] Implement `EraseAllDataUseCase` + `RestoreAllDataUseCase` + `DataSnapshot` model
+- [X] T094 [US6] Confirm sheet (inline `ModalBottomSheet`) + undo snackbar (Long duration, bounded window) in `SettingsScreen.kt`/`SettingsViewModel.kt`
+- [X] T095 [US6] Erase/undo strings to `values/strings.xml` + `values-es/strings.xml`
 
 **Checkpoint**: Erase-all with working undo.
 

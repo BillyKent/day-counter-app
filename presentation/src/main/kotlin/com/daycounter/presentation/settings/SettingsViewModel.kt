@@ -5,12 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.daycounter.data.datastore.NotificationPreferencesDataStore
 import com.daycounter.domain.model.AppLanguage
 import com.daycounter.domain.model.AppearanceMode
+import com.daycounter.domain.model.DataSnapshot
 import com.daycounter.domain.repository.SettingsRepository
+import com.daycounter.domain.usecase.EraseAllDataUseCase
+import com.daycounter.domain.usecase.GetAllCountersUseCase
+import com.daycounter.domain.usecase.RestoreAllDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -19,7 +24,17 @@ import kotlinx.coroutines.launch
 class SettingsViewModel @Inject constructor(
     private val prefs: NotificationPreferencesDataStore,
     private val settingsRepository: SettingsRepository,
+    getAllCounters: GetAllCountersUseCase,
+    private val eraseAllData: EraseAllDataUseCase,
+    private val restoreAllData: RestoreAllDataUseCase,
 ) : ViewModel() {
+
+    val counterCount: StateFlow<Int> = getAllCounters().map { it.size }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+            initialValue = 0,
+        )
 
     val notificationsEnabled: StateFlow<Boolean> = prefs.notificationsEnabled
         .stateIn(
@@ -60,6 +75,25 @@ class SettingsViewModel @Inject constructor(
                 settingsRepository.setLanguage(language)
                 _languageChanged.send(Unit)
             }
+        }
+    }
+
+    // Erase-all + undo (FR-030/FR-031). The snapshot is held until undo or the next erase.
+    private var lastSnapshot: DataSnapshot? = null
+    private val _eraseUndoAvailable = Channel<Unit>(Channel.BUFFERED)
+    val eraseUndoAvailable = _eraseUndoAvailable.receiveAsFlow()
+
+    fun eraseAll() {
+        viewModelScope.launch {
+            lastSnapshot = eraseAllData()
+            _eraseUndoAvailable.send(Unit)
+        }
+    }
+
+    fun undoErase() {
+        viewModelScope.launch {
+            lastSnapshot?.let { restoreAllData(it) }
+            lastSnapshot = null
         }
     }
 

@@ -156,5 +156,14 @@
     <string name="language_name_es">Español</string>
     <string name="language_label_en">English</string>
     <string name="language_label_es">Spanish</string>
+    <string name="settings_data_header">Data</string>
+    <string name="settings_erase_all">Erase all</string>
+    <string name="settings_erase_all_description">Delete counters and reset the app</string>
+    <string name="settings_erase_confirm_title">Erase everything?</string>
+    <string name="settings_erase_confirm_message">This deletes your %1$d counters and all their history.</string>
+    <string name="settings_erase_confirm_cta">Erase all</string>
+    <string name="settings_erase_cancel">Cancel</string>
+    <string name="settings_erased_toast">All data was deleted.</string>
+    <string name="settings_undo">Undo</string>
     <string name="back">Back</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.daycounter.domain.repository
 
 import com.daycounter.domain.model.Counter
+import com.daycounter.domain.model.DataSnapshot
 import java.time.Instant
 import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
@@ -45,4 +46,13 @@ interface CounterRepository {
      * (pausedSince → [today]) and sets status=ACTIVE. No-op if already active. One transaction.
      */
     suspend fun resume(counterId: Long, today: LocalDate)
+
+    /**
+     * Erases all counters and their children (pause periods, milestones, past streaks) and returns a
+     * [DataSnapshot] of what was removed so it can be restored within the undo window (FR-030/FR-031).
+     */
+    suspend fun eraseAll(): DataSnapshot
+
+    /** Re-inserts a [DataSnapshot] captured by [eraseAll], restoring the prior state. */
+    suspend fun restore(snapshot: DataSnapshot)
 }
