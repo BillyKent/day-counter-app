@@ -134,5 +134,13 @@
     <string name="settings_title">Ajustes</string>
     <string name="settings_notifications">Notificaciones de hitos</string>
     <string name="settings_notifications_description">Recibe una notificación cuando un contador alcanza un hito.</string>
+    <string name="settings_appearance_header">Apariencia</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_description">Idioma de la aplicación</string>
+    <string name="settings_language_sheet_title">Idioma</string>
+    <string name="language_name_en">English</string>
+    <string name="language_name_es">Español</string>
+    <string name="language_label_en">Inglés</string>
+    <string name="language_label_es">Español</string>
     <string name="back">Atrás</string>
 </resources>

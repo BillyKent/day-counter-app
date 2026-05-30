@@ -27,9 +27,9 @@ implementation.
 **Purpose**: Resources and config the theme + features rely on. No new Gradle dependencies.
 
 - [ ] T001 [P] Add Outfit and Plus Jakarta Sans `.ttf` (Latin + Spanish-diacritic subset) under `presentation/src/main/res/font/` with font-family XML (`outfit.xml`, `plus_jakarta_sans.xml`)
-- [ ] T002 [P] Create `presentation/src/main/res/xml/locales_config.xml` listing `en` and `es`
-- [ ] T003 Reference `android:localeConfig="@xml/locales_config"` in `app/src/main/AndroidManifest.xml`
-- [ ] T004 [P] Confirm `androidx.appcompat` is a dependency of `:presentation` in `presentation/build.gradle.kts` (needed for locale support); add from catalog if missing
+- [X] T002 [P] Create `presentation/src/main/res/xml/locales_config.xml` listing `en` and `es`
+- [X] T003 Reference `android:localeConfig="@xml/locales_config"` in `app/src/main/AndroidManifest.xml`
+- [X] T004 [P] `androidx.appcompat` already a dependency of `:presentation` (verified)
 - [X] T005 [P] Room v3 `exportSchema` verified — `:data` build/tests pass with `version = 3` (schema generation OK)
 
 ---
@@ -160,18 +160,18 @@ fallback.
 
 ### Tests (write first, must FAIL)
 
-- [ ] T061 [P] [US3] Test `LocaleManager` applies selected `AppLanguage` to Configuration in `presentation/src/test/kotlin/com/daycounter/presentation/locale/LocaleManagerTest.kt` (Robolectric)
-- [ ] T062 [P] [US3] Compose test: Idioma sheet lists en/es, checks current, persists selection in `presentation/src/test/kotlin/com/daycounter/presentation/settings/LanguageSheetTest.kt`
+- [X] T061 [P] [US3] `LocaleManagerTest` (wrap applies en/es to Configuration) in `presentation/src/test/kotlin/com/daycounter/presentation/locale/LocaleManagerTest.kt`
+- [~] T062 [P] [US3] Compose test: Idioma sheet — deferred; needs a stateless `SettingsContent` extraction (sheet currently inline with `hiltViewModel`)
 
 ### Implementation
 
-- [ ] T063 [P] [US3] Create `LocaleManager` (Configuration/ContextWrapper) in `presentation/src/main/kotlin/com/daycounter/presentation/locale/LocaleManager.kt`
-- [ ] T064 [US3] Read language at startup (`attachBaseContext` wrap) + `recreate()` on change in `presentation/src/main/kotlin/com/daycounter/presentation/MainActivity.kt` (depends on T063, T026)
-- [ ] T065 [US3] Add `LanguageSheet` NavKey + bottom-sheet entry in `presentation/src/main/kotlin/com/daycounter/presentation/navigation/NavKeys.kt` and `AppNavDisplay.kt`
-- [ ] T066 [US3] Idioma sheet UI (native names, radio + check) wired to `SettingsViewModel` in `presentation/src/main/kotlin/com/daycounter/presentation/settings/` (depends on T065)
-- [ ] T067 [US3] Add `language`/`appearance` state + `SelectLanguage` event (persist → emit `LanguageChanged`) in `SettingsViewModel.kt`
-- [ ] T068 [US3] Idioma strings to `values/strings.xml` + `values-es/strings.xml`
-- [ ] T111 [US3] Ensure dates/numbers format per the selected language (java.time formatters bound to the active Locale; no hardcoded patterns); test in `presentation/src/test/kotlin/com/daycounter/presentation/locale/FormattingLocaleTest.kt` (FR-019) — addresses G2
+- [X] T063 [P] [US3] Create `LocaleManager` (Configuration context wrap) in `presentation/src/main/kotlin/com/daycounter/presentation/locale/LocaleManager.kt`
+- [X] T064 [US3] Read language at startup (`attachBaseContext` wrap via Hilt EntryPoint) + `recreate()` on change in `MainActivity.kt`
+- [~] T065 [US3] Idioma picker implemented as an **inline `ModalBottomSheet`** in Settings (functional) rather than a Nav3 sheet entry — revisit if a routed sheet is wanted
+- [X] T066 [US3] Idioma sheet UI (native names + label + check) wired to `SettingsViewModel`
+- [X] T067 [US3] Add `language` state + `setLanguage` (persist → emit `languageChanged`) in `SettingsViewModel.kt`
+- [X] T068 [US3] Idioma strings to `values/strings.xml` + `values-es/strings.xml`
+- [~] T111 [US3] Locale formatting: `LocaleManager.wrap` sets `Locale.setDefault` + Configuration locale, so localized `java.time` formatters and number formatting follow the selection on recreate (FR-019). Dedicated formatting test still TODO.
 
 **Checkpoint**: Language switching works and persists.
 

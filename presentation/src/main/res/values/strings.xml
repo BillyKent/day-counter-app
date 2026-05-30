@@ -134,5 +134,13 @@
     <string name="settings_title">Settings</string>
     <string name="settings_notifications">Milestone notifications</string>
     <string name="settings_notifications_description">Receive a notification when a counter hits a milestone.</string>
+    <string name="settings_appearance_header">Appearance</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_description">App language</string>
+    <string name="settings_language_sheet_title">Language</string>
+    <string name="language_name_en">English</string>
+    <string name="language_name_es">Español</string>
+    <string name="language_label_en">English</string>
+    <string name="language_label_es">Spanish</string>
     <string name="back">Back</string>
 </resources>
