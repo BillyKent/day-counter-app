@@ -9,10 +9,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.daycounter.data.datastore.OnboardingPreferencesDataStore
 import com.daycounter.data.datastore.SettingsPreferencesDataStore
 import com.daycounter.domain.model.AppLanguage
+import com.daycounter.domain.model.AppearanceMode
+import com.daycounter.domain.repository.SettingsRepository
 import com.daycounter.presentation.locale.LocaleManager
+import com.daycounter.presentation.theme.resolveDarkTheme
 import com.daycounter.presentation.navigation.Contadores
 import com.daycounter.presentation.navigation.DeepLinkResolver
 import com.daycounter.presentation.navigation.MainScaffold
@@ -34,6 +39,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var onboardingPrefs: OnboardingPreferencesDataStore
+
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
 
     /** Entry point to read the persisted language before Hilt field injection is available. */
     @EntryPoint
@@ -66,7 +74,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val onboardingShown by onboardingShownState
-            DayCounterTheme {
+            val appearance by settingsRepository.appearance
+                .collectAsStateWithLifecycle(initialValue = AppearanceMode.DEFAULT)
+            DayCounterTheme(darkTheme = appearance.resolveDarkTheme(isSystemInDarkTheme())) {
                 val backStack = remember {
                     TopLevelBackStack<NavKey>(Contadores).apply {
                         if (onboardingShown == false) {

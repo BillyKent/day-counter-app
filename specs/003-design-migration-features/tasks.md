@@ -266,13 +266,13 @@ applied.
 
 ### Tests (write first, must FAIL)
 
-- [ ] T096 [P] [US7] Compose test: appearance setting toggles theme + persists in `presentation/src/test/kotlin/com/daycounter/presentation/settings/AppearanceTest.kt`
+- [X] T096 [P] [US7] `AppearanceTest` (resolveDarkTheme: System follows device, Light/Dark override) in `presentation/src/test/kotlin/com/daycounter/presentation/theme/AppearanceTest.kt`
 
 ### Implementation
 
-- [ ] T097 [US7] Read `appearance` and pass `darkTheme` to `DayCounterTheme` in `MainActivity.kt`/root composable (depends on T010, T026)
-- [ ] T098 [US7] Apariencia row (dark-mode control) wired to `SettingsViewModel` in `SettingsScreen.kt`
-- [ ] T099 [US7] Appearance strings to `values/strings.xml` + `values-es/strings.xml`
+- [X] T097 [US7] Read `appearance` and pass `darkTheme = appearance.resolveDarkTheme(isSystemInDarkTheme())` to `DayCounterTheme` in `MainActivity.kt` (reactive recompose)
+- [X] T098 [US7] Apariencia section (System/Light/Dark chips) wired to `SettingsViewModel` in `SettingsScreen.kt`
+- [X] T099 [US7] Appearance strings to `values/strings.xml` + `values-es/strings.xml`
 
 **Checkpoint**: Appearance control works and persists.
 

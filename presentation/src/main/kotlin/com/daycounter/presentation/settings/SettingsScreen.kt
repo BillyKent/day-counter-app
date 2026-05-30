@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -37,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.LaunchedEffect
 import com.daycounter.domain.model.AppLanguage
+import com.daycounter.domain.model.AppearanceMode
 import com.daycounter.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +48,7 @@ fun SettingsScreen(
 ) {
     val enabled by viewModel.notificationsEnabled.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
+    val appearance by viewModel.appearance.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     // Recreate the activity once a language change is persisted so the new locale takes effect (US3).
@@ -83,6 +86,31 @@ fun SettingsScreen(
                         .semantics { contentDescription = "Toggle milestone notifications" }
                         .testTag("settings_notifications_switch"),
                 )
+            }
+
+            // Appearance section (US7).
+            Text(
+                text = stringResource(R.string.settings_appearance_header),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+            )
+            Text(
+                text = stringResource(R.string.settings_dark_mode),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).testTag("settings_appearance"),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                AppearanceMode.entries.forEach { mode ->
+                    FilterChip(
+                        selected = mode == appearance,
+                        onClick = { viewModel.setAppearance(mode) },
+                        label = { Text(stringResource(mode.labelRes())) },
+                        modifier = Modifier.testTag("appearance_${mode.name.lowercase()}"),
+                    )
+                }
             }
 
             // Language row (US3).
@@ -175,4 +203,10 @@ private fun AppLanguage.nativeNameRes(): Int = when (this) {
 private fun AppLanguage.labelRes(): Int = when (this) {
     AppLanguage.ENGLISH -> R.string.language_label_en
     AppLanguage.SPANISH -> R.string.language_label_es
+}
+
+private fun AppearanceMode.labelRes(): Int = when (this) {
+    AppearanceMode.SYSTEM -> R.string.settings_appearance_system
+    AppearanceMode.LIGHT -> R.string.settings_appearance_light
+    AppearanceMode.DARK -> R.string.settings_appearance_dark
 }

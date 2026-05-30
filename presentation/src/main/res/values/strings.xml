@@ -135,6 +135,10 @@
     <string name="settings_notifications">Milestone notifications</string>
     <string name="settings_notifications_description">Receive a notification when a counter hits a milestone.</string>
     <string name="settings_appearance_header">Appearance</string>
+    <string name="settings_dark_mode">Dark mode</string>
+    <string name="settings_appearance_system">System</string>
+    <string name="settings_appearance_light">Light</string>
+    <string name="settings_appearance_dark">Dark</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_description">App language</string>
     <string name="settings_language_sheet_title">Language</string>

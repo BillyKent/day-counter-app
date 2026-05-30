@@ -135,6 +135,10 @@
     <string name="settings_notifications">Notificaciones de hitos</string>
     <string name="settings_notifications_description">Recibe una notificación cuando un contador alcanza un hito.</string>
     <string name="settings_appearance_header">Apariencia</string>
+    <string name="settings_dark_mode">Modo oscuro</string>
+    <string name="settings_appearance_system">Sistema</string>
+    <string name="settings_appearance_light">Claro</string>
+    <string name="settings_appearance_dark">Oscuro</string>
     <string name="settings_language">Idioma</string>
     <string name="settings_language_description">Idioma de la aplicación</string>
     <string name="settings_language_sheet_title">Idioma</string>

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.daycounter.data.datastore.NotificationPreferencesDataStore
 import com.daycounter.domain.model.AppLanguage
+import com.daycounter.domain.model.AppearanceMode
 import com.daycounter.domain.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,6 +34,17 @@ class SettingsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
             initialValue = AppLanguage.DEFAULT,
         )
+
+    val appearance: StateFlow<AppearanceMode> = settingsRepository.appearance
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+            initialValue = AppearanceMode.DEFAULT,
+        )
+
+    fun setAppearance(mode: AppearanceMode) {
+        viewModelScope.launch { settingsRepository.setAppearance(mode) }
+    }
 
     // Emitted after a language change is persisted so the screen can recreate() the activity (US3).
     private val _languageChanged = Channel<Unit>(Channel.BUFFERED)
