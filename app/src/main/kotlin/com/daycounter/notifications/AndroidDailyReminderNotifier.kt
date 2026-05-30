@@ -1,6 +1,7 @@
 package com.daycounter.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -23,6 +24,9 @@ import javax.inject.Singleton
 @Singleton
 class AndroidDailyReminderNotifier @Inject constructor() : DailyReminderNotifier {
 
+    // Permission is verified by hasPostPermission() below before notify(); lint's intraprocedural
+    // analysis can't see the helper, so the guarded notify() is safe to suppress (Principle V).
+    @SuppressLint("MissingPermission")
     override suspend fun notifyDailyReminder(context: Context, activeCounters: Int) {
         if (!hasPostPermission(context)) return
 

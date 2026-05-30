@@ -283,12 +283,12 @@ applied.
 
 ## Phase 10: Polish & Cross-Cutting Concerns
 
-- [ ] T100 [P] Add KDoc to all new public `:domain`/`:data` symbols (use cases, repositories, models)
-- [ ] T101 Run `:domain:koverVerify` (≥ 80 %, non-decreasing); add tests to close gaps
-- [ ] T102 Run `detekt` + `:app:lintDebug`; resolve to zero errors
-- [ ] T103 Build release AAB; verify ≤ 10 MB; subset fonts to Latin if over budget (per Complexity Tracking)
-- [ ] T104 Commit the Room v3 exported schema JSON under `data/schemas/`
-- [ ] T105 [P] Run `quickstart.md` manual verification (SC-001…SC-010), including TalkBack + dark-mode passes
+- [X] T100 [P] KDoc added to new public `:domain`/`:data` symbols (use cases, repositories, models) throughout
+- [~] T101 Coverage — `koverVerify` task not configured in this build; domain has unit tests for every new use case. Wire a kover verify rule as a follow-up
+- [X] T102 `detekt` + `:app:lintDebug` both pass with zero errors (added one justified `@SuppressLint` for the guarded reminder notify)
+- [~] T103 Release AAB ≤ 10 MB — verify when font binaries (T001) are added; current build has no bundled fonts yet
+- [X] T104 Room v3 exported schema JSON committed under `data/schemas/` (with the foundational commit)
+- [~] T105 [P] `quickstart.md` manual verification (SC-001…SC-010) + TalkBack/dark-mode — manual pre-merge step
 - [x] T106 Resolve the dynamic-color Constitution deviation — **DONE**: Principle I amended to v2.3.0 (2026-05-29), dynamic color conditional under a defined brand design system
 - [ ] T107 Regenerate the Baseline Profile (Macrobenchmark) covering the new user flows (pause/resume, settings sheets — Idioma/Hora/Borrar todo, stats) and ship it with the release AAB; review startup/frame results before release (constitution Technical Standards) — addresses C1
 
