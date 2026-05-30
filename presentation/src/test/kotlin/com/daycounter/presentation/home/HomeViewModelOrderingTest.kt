@@ -3,9 +3,9 @@ package com.daycounter.presentation.home
 import app.cash.turbine.test
 import com.daycounter.domain.model.Counter
 import com.daycounter.domain.repository.CounterRepository
-import com.daycounter.domain.usecase.CalculateStreakUseCase
+import com.daycounter.domain.repository.PausePeriodRepository
+import com.daycounter.domain.usecase.CalculateEffectiveStreakUseCase
 import com.daycounter.domain.usecase.GetAllCountersUseCase
-import com.daycounter.domain.usecase.GetStatsSummaryUseCase
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -49,9 +49,11 @@ class HomeViewModelOrderingTest {
         every { repo.getAllSortedByStreak() } returns flowOf(counters)
         val getAll = GetAllCountersUseCase(repo)
         val clock = Clock.fixed(today.atStartOfDay(ZoneOffset.UTC).toInstant(), ZoneOffset.UTC)
-        val calc = CalculateStreakUseCase(clock, ZoneOffset.UTC)
+        val calc = CalculateEffectiveStreakUseCase(clock, ZoneOffset.UTC)
+        val pauseRepo = mockk<PausePeriodRepository>()
+        every { pauseRepo.observeAll() } returns flowOf(emptyList())
 
-        val sut = HomeViewModel(getAll, calc, GetStatsSummaryUseCase(calc))
+        val sut = HomeViewModel(getAll, pauseRepo, calc)
 
         sut.uiState.test {
             // Skip the initial loading state, then read the first emission with data.

@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -55,7 +56,12 @@ fun HomeScreen(
         viewModel.onResume()
         onPauseOrDispose { }
     }
-    HomeContent(state = state, onCardTap = onCardTap, onAddTap = onAddTap)
+    HomeContent(
+        state = state,
+        onCardTap = onCardTap,
+        onAddTap = onAddTap,
+        onSetFilter = viewModel::setFilter,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,6 +70,7 @@ internal fun HomeContent(
     state: HomeUiState,
     onCardTap: (Long) -> Unit,
     onAddTap: () -> Unit,
+    onSetFilter: (CounterFilter) -> Unit,
 ) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.home_title)) }) },
@@ -76,7 +83,8 @@ internal fun HomeContent(
             )
         },
     ) { padding ->
-        if (state.isEmpty) {
+        // Only a brand-new install (no counters at all) shows the full empty state without chips.
+        if (state.emptyKind == EmptyKind.NO_COUNTERS) {
             EmptyState(padding, onAddTap)
         } else {
             LazyColumn(
@@ -92,11 +100,68 @@ internal fun HomeContent(
                 state.summary?.let { summary ->
                     item(key = "summary") { SummaryCard(summary) }
                 }
-                items(state.counters, key = { it.id }) { card ->
-                    CounterCard(card = card, onClick = { onCardTap(card.id) })
+                item(key = "filters") {
+                    FilterChips(filter = state.filter, counts = state.counts, onSetFilter = onSetFilter)
+                }
+                if (state.counters.isEmpty()) {
+                    item(key = "filter_empty") { FilterEmptyMessage(state.emptyKind) }
+                } else {
+                    items(state.counters, key = { it.id }) { card ->
+                        CounterCard(card = card, onClick = { onCardTap(card.id) })
+                    }
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FilterChips(
+    filter: CounterFilter,
+    counts: FilterCounts,
+    onSetFilter: (CounterFilter) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().testTag("home_filters"),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        FilterChip(
+            selected = filter == CounterFilter.ALL,
+            onClick = { onSetFilter(CounterFilter.ALL) },
+            label = { Text("${stringResource(R.string.home_filter_all)} ${counts.all}") },
+            modifier = Modifier.testTag("filter_all"),
+        )
+        FilterChip(
+            selected = filter == CounterFilter.ACTIVE,
+            onClick = { onSetFilter(CounterFilter.ACTIVE) },
+            label = { Text("${stringResource(R.string.home_filter_active)} ${counts.active}") },
+            modifier = Modifier.testTag("filter_active"),
+        )
+        FilterChip(
+            selected = filter == CounterFilter.PAUSED,
+            onClick = { onSetFilter(CounterFilter.PAUSED) },
+            label = { Text("${stringResource(R.string.home_filter_paused)} ${counts.paused}") },
+            modifier = Modifier.testTag("filter_paused"),
+        )
+    }
+}
+
+@Composable
+private fun FilterEmptyMessage(emptyKind: EmptyKind) {
+    val text = when (emptyKind) {
+        EmptyKind.NO_PAUSED -> stringResource(R.string.home_empty_paused)
+        EmptyKind.NO_ACTIVE -> stringResource(R.string.home_empty_active)
+        else -> ""
+    }
+    Box(modifier = Modifier.fillMaxWidth().padding(top = 48.dp), contentAlignment = Alignment.Center) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.testTag("home_filter_empty"),
+        )
     }
 }
 
@@ -150,13 +215,18 @@ private fun CounterCard(card: CounterCardUi, onClick: () -> Unit) {
                 contentDescription = ringDescription,
                 diameter = 72.dp,
                 strokeWidth = 8.dp,
+                paused = card.isPaused,
             ) {
                 Text(card.streakDays.toString(), style = MaterialTheme.typography.titleLarge)
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = card.name, style = MaterialTheme.typography.titleMedium, maxLines = 2)
                 Text(
-                    text = stringResource(R.string.home_card_start_date, card.startDate.format(dateFormatter)),
+                    text = if (card.isPaused) {
+                        stringResource(R.string.home_card_paused)
+                    } else {
+                        stringResource(R.string.home_card_start_date, card.startDate.format(dateFormatter))
+                    },
                     style = MaterialTheme.typography.bodySmall,
                 )
                 if (card.goalReached) {

@@ -45,6 +45,12 @@
     <string name="home_badge_goal_reached">Hito alcanzado</string>
     <string name="home_card_start_date">Desde el %1$s</string>
     <string name="home_ring_content_description">Progreso: %1$d de %2$d días</string>
+    <string name="home_filter_all">Todos</string>
+    <string name="home_filter_active">Activos</string>
+    <string name="home_filter_paused">Pausados</string>
+    <string name="home_card_paused">En pausa</string>
+    <string name="home_empty_active">No hay contadores activos.</string>
+    <string name="home_empty_paused">No tienes contadores en pausa.</string>
 
     <!-- Detalle del contador -->
     <string name="counter_detail_title">Contador</string>
@@ -57,6 +63,11 @@
     <string name="counter_detail_action_history">Abrir historial</string>
     <string name="counter_detail_action_revive">Revivir celebración</string>
     <string name="counter_detail_milestone_chip">%1$d</string>
+    <string name="counter_detail_pause">Pausar contador</string>
+    <string name="counter_detail_resume">Reanudar contador</string>
+    <string name="counter_detail_paused_label">En pausa</string>
+    <string name="counter_detail_paused_banner_title">Contador en pausa</string>
+    <string name="counter_detail_paused_banner_subtitle">Sin notificaciones · %1$d días en pausa</string>
 
     <!-- Crear / editar contador -->
     <string name="counter_goal_name_label">Nombre</string>

@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,6 +81,7 @@ fun CounterDetailScreen(
         state = state,
         counterId = counterId,
         actions = actions,
+        onTogglePause = viewModel::togglePause,
         onRequestDelete = viewModel::requestDelete,
         onConfirmDelete = viewModel::confirmDelete,
         onDismissDelete = viewModel::dismissDelete,
@@ -92,6 +94,7 @@ internal fun CounterDetailContent(
     state: CounterDetailUiState,
     counterId: Long,
     actions: CounterDetailActions,
+    onTogglePause: () -> Unit,
     onRequestDelete: () -> Unit,
     onConfirmDelete: () -> Unit,
     onDismissDelete: () -> Unit,
@@ -129,24 +132,51 @@ internal fun CounterDetailContent(
                 ),
                 diameter = 160.dp,
                 strokeWidth = 14.dp,
+                paused = state.isPaused,
             ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (state.isPaused) {
+                        Text(
+                            text = stringResource(R.string.counter_detail_paused_label),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Text(
+                        text = state.streakDays.toString(),
+                        style = MaterialTheme.typography.displayMedium,
+                        modifier = Modifier.testTag("detail_hero_streak"),
+                    )
+                }
+            }
+
+            if (!state.isPaused) {
                 Text(
-                    text = state.streakDays.toString(),
-                    style = MaterialTheme.typography.displayMedium,
-                    modifier = Modifier.testTag("detail_hero_streak"),
+                    text = if (state.nextMilestone != null) {
+                        stringResource(R.string.counter_detail_next_milestone, state.nextMilestone - state.streakDays)
+                    } else {
+                        stringResource(R.string.counter_detail_all_milestones)
+                    },
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.testTag("detail_next_milestone"),
                 )
             }
 
-            Text(
-                text = if (state.nextMilestone != null) {
-                    stringResource(R.string.counter_detail_next_milestone, state.nextMilestone - state.streakDays)
-                } else {
-                    stringResource(R.string.counter_detail_all_milestones)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.testTag("detail_next_milestone"),
-            )
+            if (state.isPaused) {
+                PausedBanner(pausedDays = state.pausedDays)
+            }
+
+            Button(
+                onClick = onTogglePause,
+                modifier = Modifier.fillMaxWidth().sizeIn(minHeight = 48.dp).testTag("detail_toggle_pause"),
+            ) {
+                Text(
+                    stringResource(
+                        if (state.isPaused) R.string.counter_detail_resume else R.string.counter_detail_pause,
+                    ),
+                )
+            }
 
             if (state.achievedMilestones.isNotEmpty()) {
                 Text(
@@ -176,6 +206,28 @@ internal fun CounterDetailContent(
                 dismissButton = {
                     TextButton(onClick = onDismissDelete) { Text(stringResource(R.string.counter_cancel)) }
                 },
+            )
+        }
+    }
+}
+
+@Composable
+private fun PausedBanner(pausedDays: Int) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.fillMaxWidth().testTag("detail_paused_banner"),
+    ) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(
+                text = stringResource(R.string.counter_detail_paused_banner_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = stringResource(R.string.counter_detail_paused_banner_subtitle, pausedDays),
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }

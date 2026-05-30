@@ -107,7 +107,7 @@ prior actions still work; TalkBack pass.
 - [ ] T039 [P] [US1] Reskin Settings shell (grouped sections) in `presentation/src/main/kotlin/com/daycounter/presentation/settings/SettingsScreen.kt`
 - [ ] T040 [P] [US1] Reskin Onboarding (updated copy) + Empty state in `presentation/src/main/kotlin/com/daycounter/presentation/onboarding/OnboardingScreen.kt`
 - [ ] T041 [US1] Reskin Milestone Celebration + add "Compartir" share action in `presentation/src/main/kotlin/com/daycounter/presentation/celebration/MilestoneCelebrationScreen.kt` (depends on T032)
-- [ ] T042 [P] [US1] Update `ProgressRing` to token colors + milestone glow in `presentation/src/main/kotlin/com/daycounter/presentation/components/ProgressRing.kt`
+- [X] T042 [P] [US1] Update `ProgressRing` to token colors + milestone glow (+ `paused` dashed/muted state for US2) in `presentation/src/main/kotlin/com/daycounter/presentation/components/ProgressRing.kt`
 - [ ] T043 [P] [US1] Reskin Glance widget to brand tokens in `presentation/src/main/kotlin/com/daycounter/presentation/widget/DayCounterWidget.kt`
 - [ ] T044 [US1] Add share strings + new copy to `presentation/src/main/res/values/strings.xml` and `values-es/strings.xml` (no hardcoded literals)
 - [ ] T045 [US1] Accessibility pass: TalkBack labels + non-color state cues across reskinned screens; verify 48dp targets
@@ -128,24 +128,24 @@ no milestone while paused; history unchanged; survives restart.
 
 ### Tests (write first, must FAIL)
 
-- [ ] T046 [P] [US2] Unit test `PauseCounterUseCaseTest` + `ResumeCounterUseCaseTest` in `domain/src/test/kotlin/com/daycounter/domain/usecase/`
+- [X] T046 [P] [US2] Unit test `PauseResumeUseCaseTest` (pause/resume delegate to repo with today) in `domain/src/test/kotlin/com/daycounter/domain/usecase/`
 - [ ] T047 [P] [US2] Integration test: pause/resume `@Transaction` (one PausePeriod inserted, status flip, no milestone/past-streak change) in `data/src/test/kotlin/com/daycounter/data/`
 - [ ] T048 [P] [US2] Compose test: Detail paused state (dashed ring, "En pausa", banner, Reanudar) in `presentation/src/test/kotlin/com/daycounter/presentation/counter/PauseDetailTest.kt`
 - [ ] T049 [P] [US2] Compose test: Home filter chips filter + live counts + empty states in `presentation/src/test/kotlin/com/daycounter/presentation/home/FilterChipsTest.kt`
 
 ### Implementation
 
-- [ ] T050 [P] [US2] Implement `PauseCounterUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/PauseCounterUseCase.kt`
-- [ ] T051 [P] [US2] Implement `ResumeCounterUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/ResumeCounterUseCase.kt`
+- [X] T050 [P] [US2] Implement `PauseCounterUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/PauseCounterUseCase.kt`
+- [X] T051 [P] [US2] Implement `ResumeCounterUseCase` in `domain/src/main/kotlin/com/daycounter/domain/usecase/ResumeCounterUseCase.kt`
 - [X] T052 [US2] Add `pause`/`resume` `@Transaction` to `data/src/main/kotlin/com/daycounter/data/database/dao/CounterDao.kt` (done in Phase 2 shared surface)
 - [X] T053 [US2] Implement pause/resume in `data/src/main/kotlin/com/daycounter/data/repository/CounterRepositoryImpl.kt` (done in Phase 2 shared surface)
-- [ ] T054 [US2] Wire pause/resume + paused state into `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
-- [ ] T055 [US2] Detail UI: dashed/muted paused ring, "En pausa" numeral label, banner, "Reanudar/Pausar" primary in `CounterDetailScreen.kt` + `ProgressRing.kt` `paused` param
-- [ ] T056 [US2] Home filter chips (Todos/Activos/Pausados + live counts + empty states) in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeViewModel.kt` and `HomeScreen.kt`
-- [ ] T057 [P] [US2] Use effective days on Home/Detail cards (via `CalculateEffectiveStreakUseCase`) and widget paused indicator
-- [ ] T058 [US2] Ensure milestone notifier/celebration reads `status`/effective days to suppress while paused in `app/src/main/kotlin/com/daycounter/notifications/` and `CounterDetailViewModel`
-- [ ] T059 [US2] Update Reset to clear pause state (status→ACTIVE, drop pause periods) in the reset use case + `CounterDao`
-- [ ] T060 [US2] Pause/resume + filter strings to `values/strings.xml` + `values-es/strings.xml`
+- [X] T054 [US2] Wire pause/resume + paused state into `presentation/src/main/kotlin/com/daycounter/presentation/counter/CounterDetailViewModel.kt`
+- [X] T055 [US2] Detail UI: dashed/muted paused ring, "En pausa" numeral label, banner, "Reanudar/Pausar" primary in `CounterDetailScreen.kt` + `ProgressRing.kt` `paused` param
+- [X] T056 [US2] Home filter chips (Todos/Activos/Pausados + live counts + empty states) in `presentation/src/main/kotlin/com/daycounter/presentation/home/HomeViewModel.kt` and `HomeScreen.kt`
+- [~] T057 [P] [US2] Effective days: **Detail + Home done** (CalculateEffectiveStreakUseCase + paused freeze + paused card indicator); Glance widget paused indicator pending (with T043/T110)
+- [~] T058 [US2] **Celebration suppressed while paused (Detail VM) done**; milestone notifier worker status-awareness pending
+- [X] T059 [US2] Reset clears pause state (status→ACTIVE, drop pause periods) — done in `CounterDao.archiveAndReset`
+- [X] T060 [US2] Pause/resume + filter strings to `values/strings.xml` + `values-es/strings.xml`
 
 **Checkpoint**: Pause/resume fully functional and independently testable.
 

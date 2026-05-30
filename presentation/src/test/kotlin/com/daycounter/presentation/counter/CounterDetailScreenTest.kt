@@ -43,6 +43,7 @@ class CounterDetailScreenTest {
                     state = state,
                     counterId = 1L,
                     actions = actions,
+                    onTogglePause = {},
                     onRequestDelete = {},
                     onConfirmDelete = {},
                     onDismissDelete = {},

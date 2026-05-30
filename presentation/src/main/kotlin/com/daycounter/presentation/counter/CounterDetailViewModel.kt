@@ -5,13 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.daycounter.domain.model.MilestoneRecord
 import com.daycounter.domain.repository.MilestoneRepository
-import com.daycounter.domain.usecase.CalculateStreakUseCase
+import com.daycounter.domain.repository.PausePeriodRepository
+import com.daycounter.domain.usecase.CalculateEffectiveStreakUseCase
 import com.daycounter.domain.usecase.DeleteCounterUseCase
 import com.daycounter.domain.usecase.GetAchievedMilestonesUseCase
 import com.daycounter.domain.usecase.GetCounterByIdUseCase
 import com.daycounter.domain.usecase.GetMostRecentMilestoneUseCase
 import com.daycounter.domain.usecase.GetNextMilestoneUseCase
 import com.daycounter.domain.usecase.MarkCelebrationsShownUseCase
+import com.daycounter.domain.usecase.PauseCounterUseCase
+import com.daycounter.domain.usecase.ResumeCounterUseCase
 import com.daycounter.presentation.widget.WidgetStateUpdater
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -39,13 +42,20 @@ data class CounterDetailUiState(
     val canRevive: Boolean = false,
     val mostRecentMilestone: Int? = null,
     val deleteConfirmVisible: Boolean = false,
+    /** True when the counter is paused; the ring is frozen/dashed and the banner is shown (US2). */
+    val isPaused: Boolean = false,
+    /** Total days spent paused (completed intervals + the ongoing pause), for the banner. */
+    val pausedDays: Int = 0,
 )
 
 @HiltViewModel(assistedFactory = CounterDetailViewModel.Factory::class)
 class CounterDetailViewModel @AssistedInject constructor(
     @Assisted private val counterId: Long,
     private val getCounter: GetCounterByIdUseCase,
-    private val calculateStreak: CalculateStreakUseCase,
+    private val calculateEffectiveStreak: CalculateEffectiveStreakUseCase,
+    private val pausePeriodRepository: PausePeriodRepository,
+    private val pauseCounter: PauseCounterUseCase,
+    private val resumeCounter: ResumeCounterUseCase,
     private val getNextMilestone: GetNextMilestoneUseCase,
     private val getAchievedMilestones: GetAchievedMilestonesUseCase,
     private val getMostRecentMilestone: GetMostRecentMilestoneUseCase,
@@ -53,6 +63,7 @@ class CounterDetailViewModel @AssistedInject constructor(
     private val milestoneRepository: MilestoneRepository,
     private val markCelebrationsShown: MarkCelebrationsShownUseCase,
     private val clock: Clock,
+    private val zone: java.time.ZoneId,
     private val widgetStateUpdater: WidgetStateUpdater,
     private val application: Application,
 ) : ViewModel() {
@@ -82,9 +93,17 @@ class CounterDetailViewModel @AssistedInject constructor(
                 _state.update { it.copy(isLoading = false, missing = true) }
                 return@launch
             }
-            val streak = calculateStreak(counter.startDate)
+            val completedPaused = pausePeriodRepository.completedPausedDays(counterId)
+            val streak = calculateEffectiveStreak(counter, completedPaused)
             val target = counter.goalMilestoneTarget.coerceAtLeast(1)
             val mostRecent = getMostRecentMilestone(streak)
+            val today = java.time.LocalDate.now(clock.withZone(zone))
+            val ongoingPaused = if (counter.isPaused && counter.pausedSince != null) {
+                java.time.temporal.ChronoUnit.DAYS
+                    .between(counter.pausedSince, today).coerceAtLeast(0L).toInt()
+            } else {
+                0
+            }
             _state.update {
                 it.copy(
                     isLoading = false,
@@ -97,9 +116,20 @@ class CounterDetailViewModel @AssistedInject constructor(
                     achievedMilestones = getAchievedMilestones(streak),
                     canRevive = mostRecent != null,
                     mostRecentMilestone = mostRecent,
+                    isPaused = counter.isPaused,
+                    pausedDays = completedPaused + ongoingPaused,
                 )
             }
-            maybeAutoLaunchCelebration(streak)
+            maybeAutoLaunchCelebration(streak, counter.isPaused)
+        }
+    }
+
+    /** Toggles pause/resume (FR-007/FR-008), then recomputes and refreshes the widget. */
+    fun togglePause() {
+        viewModelScope.launch {
+            if (_state.value.isPaused) resumeCounter(counterId) else pauseCounter(counterId)
+            widgetStateUpdater.refreshForCounter(application.applicationContext, counterId)
+            load()
         }
     }
 
@@ -108,7 +138,8 @@ class CounterDetailViewModel @AssistedInject constructor(
      * auto-launches the celebration for the most-recent one if it has not yet been shown (FR-021,
      * SC-004). Marking-all-shown happens here so a subsequent resume never re-launches.
      */
-    private suspend fun maybeAutoLaunchCelebration(streak: Int) {
+    private suspend fun maybeAutoLaunchCelebration(streak: Int, paused: Boolean) {
+        if (paused) return // No celebration while paused (FR-011).
         val achieved = getAchievedMilestones(streak)
         if (achieved.isEmpty()) return
         val mostRecent = achieved.max()

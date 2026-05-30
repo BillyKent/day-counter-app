@@ -45,6 +45,12 @@
     <string name="home_badge_goal_reached">Goal reached</string>
     <string name="home_card_start_date">Started %1$s</string>
     <string name="home_ring_content_description">Progress: %1$d of %2$d days</string>
+    <string name="home_filter_all">All</string>
+    <string name="home_filter_active">Active</string>
+    <string name="home_filter_paused">Paused</string>
+    <string name="home_card_paused">Paused</string>
+    <string name="home_empty_active">No active counters.</string>
+    <string name="home_empty_paused">You have no paused counters.</string>
 
     <!-- Counter detail -->
     <string name="counter_detail_title">Counter</string>
@@ -57,6 +63,11 @@
     <string name="counter_detail_action_history">Open history</string>
     <string name="counter_detail_action_revive">Replay celebration</string>
     <string name="counter_detail_milestone_chip">%1$d</string>
+    <string name="counter_detail_pause">Pause counter</string>
+    <string name="counter_detail_resume">Resume counter</string>
+    <string name="counter_detail_paused_label">Paused</string>
+    <string name="counter_detail_paused_banner_title">Counter paused</string>
+    <string name="counter_detail_paused_banner_subtitle">No notifications · %1$d days paused</string>
 
     <!-- Counter create / edit -->
     <string name="counter_goal_name_label">Goal name</string>

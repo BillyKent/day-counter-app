@@ -36,6 +36,7 @@ class HomeScreenTest {
         ringFillRatio = (streak.toFloat() / target).coerceIn(0f, 1f),
         goalReached = streak >= target,
         category = null,
+        isPaused = false,
     )
 
     @Test
@@ -43,9 +44,15 @@ class HomeScreenTest {
         compose.setContent {
             DayCounterTheme {
                 HomeContent(
-                    state = HomeUiState(isLoading = false, counters = emptyList(), summary = null),
+                    state = HomeUiState(
+                        isLoading = false,
+                        counters = emptyList(),
+                        summary = null,
+                        emptyKind = EmptyKind.NO_COUNTERS,
+                    ),
                     onCardTap = {},
                     onAddTap = {},
+                    onSetFilter = {},
                 )
             }
         }
@@ -64,6 +71,7 @@ class HomeScreenTest {
                     ),
                     onCardTap = {},
                     onAddTap = {},
+                    onSetFilter = {},
                 )
             }
         }
@@ -90,6 +98,7 @@ class HomeScreenTest {
                     ),
                     onCardTap = { tapped = it },
                     onAddTap = { added = true },
+                    onSetFilter = {},
                 )
             }
         }
